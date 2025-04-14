@@ -1,4 +1,3 @@
-
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FAQItem from '../components/FAQItem';
@@ -36,16 +35,23 @@ const AffiliationPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-orange-50 to-orange-100 py-16">
+      {/* Hero Section avec background Africa AI */}
+      <section 
+        className="bg-cover bg-center py-16"
+        style={{ 
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/lovable-uploads/19e61f04-7070-4239-a1e0-863ec9578037.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      >
         <div className="container mx-auto px-4 text-center">
           <div className="bg-orange-500 text-white font-bold rounded-full h-12 w-12 flex items-center justify-center text-xl mx-auto mb-4">
             25%
           </div>
-          <h1 className="text-4xl font-bold mb-6">
+          <h1 className="text-4xl font-bold mb-6 text-white">
             Comment fonctionne notre programme d'affiliation?
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-8">
+          <p className="text-gray-200 max-w-2xl mx-auto mb-8">
             Gagnez de l'argent en partageant le savoir. Transformez votre influence en revenus tout en aidant les autres à développer leurs compétences.
           </p>
           <Link

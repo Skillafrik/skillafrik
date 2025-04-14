@@ -18,8 +18,10 @@ const Navbar = () => {
             <button className="text-gray-600 hover:text-gray-900 flex items-center">
               Catégories <span className="ml-1">▼</span>
             </button>
+            {/* Dropdown menu could be added here */}
           </div>
           <Link to="/affiliation" className="text-gray-600 hover:text-gray-900">Affiliation</Link>
+          <Link to="/partenaire" className="text-gray-600 hover:text-gray-900">Partenaires</Link>
           <Link to="/a-propos" className="text-gray-600 hover:text-gray-900">A propos</Link>
         </nav>
 
