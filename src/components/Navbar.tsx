@@ -1,5 +1,21 @@
 
 import { Link } from "react-router-dom";
+import { 
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger
+} from "@/components/ui/navigation-menu";
+import { 
+  Briefcase, 
+  Leaf, 
+  Cpu, 
+  Brain, 
+  LineChart,
+  ChevronDown
+} from "lucide-react";
 
 const Navbar = () => {
   return (
@@ -14,12 +30,51 @@ const Navbar = () => {
 
         <nav className="hidden md:flex space-x-6">
           <Link to="/cours" className="text-gray-600 hover:text-gray-900">Cours</Link>
-          <div className="relative group">
-            <button className="text-gray-600 hover:text-gray-900 flex items-center">
-              Catégories <span className="ml-1">▼</span>
-            </button>
-            {/* Dropdown menu could be added here */}
-          </div>
+          
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-gray-600 hover:text-gray-900 bg-transparent">
+                  Catégories
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="p-2 w-[280px]">
+                  <ul className="grid gap-1">
+                    <li>
+                      <Link to="/categories/business" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
+                        <Briefcase className="h-4 w-4 mr-2 text-orange-500" />
+                        <span>Business & Entrepreneuriat</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/categories/agriculture" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
+                        <Leaf className="h-4 w-4 mr-2 text-orange-500" />
+                        <span>Agriculture</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/categories/technologie" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
+                        <Cpu className="h-4 w-4 mr-2 text-orange-500" />
+                        <span>Technologie</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/categories/ia" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
+                        <Brain className="h-4 w-4 mr-2 text-orange-500" />
+                        <span>Intelligence Artificielle</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/categories/marketing" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
+                        <LineChart className="h-4 w-4 mr-2 text-orange-500" />
+                        <span>Marketing Digital</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          
           <Link to="/affiliation" className="text-gray-600 hover:text-gray-900">Affiliation</Link>
           <Link to="/partenaire" className="text-gray-600 hover:text-gray-900">Partenaires</Link>
           <Link to="/a-propos" className="text-gray-600 hover:text-gray-900">A propos</Link>

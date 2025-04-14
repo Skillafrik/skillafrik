@@ -1,9 +1,9 @@
-
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import StatCard from '../components/StatCard';
 import FeatureCard from '../components/FeatureCard';
+import TeamMemberCard from '../components/TeamMemberCard';
 import { Users, BookOpen, Award, Globe, Heart, Briefcase, Target, Accessibility } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -13,28 +13,32 @@ const AboutPage = () => {
 
   const teamMembers = [
     {
+      name: "Koffi Adama",
+      role: "Fondateur & CEO",
+      description: "Leader visionnaire avec plus de 15 ans d'expérience dans l'éducation et la technologie en Afrique.",
+      image: "/lovable-uploads/08cbd561-eb5c-4a88-8efb-bfb8a1134f90.png",
+      isFounder: true
+    },
+    {
       name: "Aminata Diallo",
-      role: "Fondatrice & CEO",
+      role: "Directrice des Opérations",
       description: "Experte en éducation avec 10 ans d'expérience dans les technologies éducatives en Afrique.",
-      image: "/lovable-uploads/46da25f8-20d2-4ea6-bce7-c0ff2d5cba16.png"
+      image: "/lovable-uploads/46da25f8-20d2-4ea6-bce7-c0ff2d5cba16.png",
+      isFounder: false
     },
     {
       name: "Emmanuel Osei",
       role: "CTO",
       description: "Ingénieur en informatique spécialisé dans le développement de solutions tech adaptées aux défis africains.",
-      image: "/placeholder.svg"
+      image: "/placeholder.svg",
+      isFounder: false
     },
     {
       name: "Fatou Ndiaye",
       role: "Directrice du Contenu",
       description: "Ancienne professeure d'université avec une passion pour l'éducation accessible et de qualité.",
-      image: "/placeholder.svg"
-    },
-    {
-      name: "Omar Sow",
-      role: "Responsable Marketing",
-      description: "Expert en marketing digital avec une forte expérience dans les marchés émergents africains.",
-      image: "/placeholder.svg"
+      image: "/placeholder.svg",
+      isFounder: false
     }
   ];
 
@@ -128,16 +132,14 @@ const AboutPage = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {teamMembers.map((member, index) => (
-                  <div key={index} className="bg-white p-6 rounded-lg shadow-sm overflow-hidden">
-                    <img 
-                      src={member.image} 
-                      alt={member.name} 
-                      className="w-full h-48 object-cover rounded-md mb-4"
-                    />
-                    <h3 className="text-xl font-semibold">{member.name}</h3>
-                    <p className="text-orange-500 mb-2">{member.role}</p>
-                    <p className="text-gray-600 text-sm">{member.description}</p>
-                  </div>
+                  <TeamMemberCard
+                    key={index}
+                    name={member.name}
+                    role={member.role}
+                    description={member.description}
+                    image={member.image}
+                    isFounder={member.isFounder}
+                  />
                 ))}
               </div>
               
