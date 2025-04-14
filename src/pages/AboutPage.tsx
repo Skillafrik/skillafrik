@@ -13,10 +13,10 @@ const AboutPage = () => {
 
   const teamMembers = [
     {
-      name: "Koffi Adama",
+      name: "Mr LUCIEN",
       role: "Fondateur & CEO",
       description: "Leader visionnaire avec plus de 15 ans d'expérience dans l'éducation et la technologie en Afrique.",
-      image: "/lovable-uploads/08cbd561-eb5c-4a88-8efb-bfb8a1134f90.png",
+      image: "/lovable-uploads/923cc5fa-78ac-4b7c-a4d6-539acd6632f3.png",
       isFounder: true
     },
     {
@@ -92,8 +92,8 @@ const AboutPage = () => {
                 </div>
                 <div className="lg:w-1/2 mb-8 lg:mb-0 order-1 lg:order-2">
                   <img 
-                    src="/lovable-uploads/a75bf637-5bc7-47aa-98c3-9f12293079a2.png"
-                    alt="Étudiant sur ordinateur" 
+                    src="/lovable-uploads/923cc5fa-78ac-4b7c-a4d6-539acd6632f3.png"
+                    alt="Mr LUCIEN" 
                     className="rounded-lg shadow-lg"
                   />
                 </div>

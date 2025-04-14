@@ -8,18 +8,61 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger
 } from "@/components/ui/navigation-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { 
   Briefcase, 
   Leaf, 
   Cpu, 
   Brain, 
   LineChart,
-  ChevronDown
+  ChevronDown,
+  Menu,
+  X
 } from "lucide-react";
+import { useState } from "react";
 
 const Navbar = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const categories = [
+    {
+      name: "Business & Entrepreneuriat",
+      path: "/categories/business",
+      icon: <Briefcase className="h-4 w-4 mr-2 text-orange-500" />
+    },
+    {
+      name: "Agriculture",
+      path: "/categories/agriculture",
+      icon: <Leaf className="h-4 w-4 mr-2 text-orange-500" />
+    },
+    {
+      name: "Technologie",
+      path: "/categories/technologie",
+      icon: <Cpu className="h-4 w-4 mr-2 text-orange-500" />
+    },
+    {
+      name: "Intelligence Artificielle",
+      path: "/categories/ia",
+      icon: <Brain className="h-4 w-4 mr-2 text-orange-500" />
+    },
+    {
+      name: "Marketing Digital",
+      path: "/categories/marketing",
+      icon: <LineChart className="h-4 w-4 mr-2 text-orange-500" />
+    }
+  ];
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
-    <header className="border-b border-gray-100 bg-white">
+    <header className="border-b border-gray-100 bg-white sticky top-0 z-40">
       <div className="container mx-auto flex justify-between items-center h-16 px-4">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
@@ -28,6 +71,7 @@ const Navbar = () => {
           </Link>
         </div>
 
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-6">
           <Link to="/cours" className="text-gray-600 hover:text-gray-900">Cours</Link>
           
@@ -37,38 +81,19 @@ const Navbar = () => {
                 <NavigationMenuTrigger className="text-gray-600 hover:text-gray-900 bg-transparent">
                   Catégories
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="p-2 w-[280px]">
+                <NavigationMenuContent className="p-2 w-[280px] bg-white">
                   <ul className="grid gap-1">
-                    <li>
-                      <Link to="/categories/business" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
-                        <Briefcase className="h-4 w-4 mr-2 text-orange-500" />
-                        <span>Business & Entrepreneuriat</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/categories/agriculture" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
-                        <Leaf className="h-4 w-4 mr-2 text-orange-500" />
-                        <span>Agriculture</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/categories/technologie" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
-                        <Cpu className="h-4 w-4 mr-2 text-orange-500" />
-                        <span>Technologie</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/categories/ia" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
-                        <Brain className="h-4 w-4 mr-2 text-orange-500" />
-                        <span>Intelligence Artificielle</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/categories/marketing" className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md">
-                        <LineChart className="h-4 w-4 mr-2 text-orange-500" />
-                        <span>Marketing Digital</span>
-                      </Link>
-                    </li>
+                    {categories.map((category, index) => (
+                      <li key={index}>
+                        <Link 
+                          to={category.path} 
+                          className="flex items-center p-2 text-gray-700 hover:bg-orange-50 rounded-md"
+                        >
+                          {category.icon}
+                          <span>{category.name}</span>
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -80,7 +105,8 @@ const Navbar = () => {
           <Link to="/a-propos" className="text-gray-600 hover:text-gray-900">A propos</Link>
         </nav>
 
-        <div className="flex items-center space-x-2">
+        {/* Desktop Auth Buttons */}
+        <div className="hidden md:flex items-center space-x-2">
           <Link to="/connexion" className="text-gray-600 hover:text-gray-900 px-3 py-2">
             Se connecter
           </Link>
@@ -88,7 +114,53 @@ const Navbar = () => {
             S'inscrire
           </Link>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden text-gray-600"
+          onClick={toggleMobileMenu}
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-100 py-4">
+          <div className="container mx-auto px-4 space-y-4">
+            <Link to="/cours" className="block py-2 text-gray-600">Cours</Link>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center py-2 text-gray-600 w-full justify-between">
+                Catégories <ChevronDown size={16} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-full">
+                {categories.map((category, index) => (
+                  <DropdownMenuItem key={index} asChild>
+                    <Link to={category.path} className="flex items-center">
+                      {category.icon}
+                      <span>{category.name}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
+            <Link to="/affiliation" className="block py-2 text-gray-600">Affiliation</Link>
+            <Link to="/partenaire" className="block py-2 text-gray-600">Partenaires</Link>
+            <Link to="/a-propos" className="block py-2 text-gray-600">A propos</Link>
+            
+            <div className="flex flex-col space-y-2 pt-4 border-t border-gray-100">
+              <Link to="/connexion" className="text-center py-2 text-gray-600">
+                Se connecter
+              </Link>
+              <Link to="/inscription" className="text-center bg-orange-500 text-white py-2 rounded hover:bg-orange-600">
+                S'inscrire
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
