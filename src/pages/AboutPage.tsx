@@ -131,7 +131,7 @@ const AboutPage = () => {
                       
                       <div className="mt-6 flex space-x-4">
                         <Button variant="default" size="sm">
-                          <Link to="/contact">Contacter</Link>
+                          <a href="https://wa.me/79831397053" target="_blank" rel="noreferrer">Contacter</a>
                         </Button>
                         <Button variant="outline" size="sm">
                           <a href="https://linkedin.com/in/" target="_blank" rel="noreferrer">LinkedIn</a>
@@ -166,7 +166,7 @@ const AboutPage = () => {
               
               <div className="mt-16 bg-orange-50 rounded-lg p-8 shadow-sm">
                 <div className="flex flex-col md:flex-row items-center">
-                  <div className="md:w-2/3 mb-6 md:mb-0 md:pr-8">
+                  <div className="md:w-full mb-6 md:mb-0">
                     <h3 className="text-xl font-bold mb-4 flex items-center">
                       <Heart className="h-5 w-5 text-orange-500 mr-2" />
                       Rejoignez-nous
@@ -182,13 +182,6 @@ const AboutPage = () => {
                         <Link to="/formateur">Devenir formateur</Link>
                       </Button>
                     </div>
-                  </div>
-                  <div className="md:w-1/3">
-                    <img 
-                      src="/lovable-uploads/28e91729-e5b0-4221-aa41-aab0fe788c07.png" 
-                      alt="Collaboration"
-                      className="rounded-lg w-full"
-                    />
                   </div>
                 </div>
               </div>
