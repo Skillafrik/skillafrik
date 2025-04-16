@@ -21,6 +21,16 @@ import TechnologiePage from "./pages/categories/TechnologiePage";
 import IAPage from "./pages/categories/IAPage";
 import MarketingPage from "./pages/categories/MarketingPage";
 
+// Admin Pages
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminCourses from "./pages/admin/AdminCourses";
+import AdminInstructors from "./pages/admin/AdminInstructors";
+import AdminAffiliates from "./pages/admin/AdminAffiliates";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminSettings from "./pages/admin/AdminSettings";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -44,6 +54,17 @@ const App = () => (
         <Route path="/categories/technologie" element={<TechnologiePage />} />
         <Route path="/categories/ia" element={<IAPage />} />
         <Route path="/categories/marketing" element={<MarketingPage />} />
+        
+        {/* Routes pour l'administration */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="utilisateurs" element={<AdminUsers />} />
+          <Route path="cours" element={<AdminCourses />} />
+          <Route path="formateurs" element={<AdminInstructors />} />
+          <Route path="affilies" element={<AdminAffiliates />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="parametres" element={<AdminSettings />} />
+        </Route>
         
         <Route path="*" element={<NotFound />} />
       </Routes>
