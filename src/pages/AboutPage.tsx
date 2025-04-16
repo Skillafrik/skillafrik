@@ -1,46 +1,15 @@
+
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import StatCard from '../components/StatCard';
 import FeatureCard from '../components/FeatureCard';
-import TeamMemberCard from '../components/TeamMemberCard';
 import { Users, BookOpen, Award, Globe, Heart, Briefcase, Target, Accessibility } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 const AboutPage = () => {
   const [activeTab, setActiveTab] = useState('mission');
-
-  const teamMembers = [
-    {
-      name: "Mr LUCIEN",
-      role: "Fondateur & CEO",
-      description: "Leader visionnaire avec plus de 15 ans d'expérience dans l'éducation et la technologie en Afrique.",
-      image: "/lovable-uploads/923cc5fa-78ac-4b7c-a4d6-539acd6632f3.png",
-      isFounder: true
-    },
-    {
-      name: "Aminata Diallo",
-      role: "Directrice des Opérations",
-      description: "Experte en éducation avec 10 ans d'expérience dans les technologies éducatives en Afrique.",
-      image: "/lovable-uploads/46da25f8-20d2-4ea6-bce7-c0ff2d5cba16.png",
-      isFounder: false
-    },
-    {
-      name: "Emmanuel Osei",
-      role: "CTO",
-      description: "Ingénieur en informatique spécialisé dans le développement de solutions tech adaptées aux défis africains.",
-      image: "/placeholder.svg",
-      isFounder: false
-    },
-    {
-      name: "Fatou Ndiaye",
-      role: "Directrice du Contenu",
-      description: "Ancienne professeure d'université avec une passion pour l'éducation accessible et de qualité.",
-      image: "/placeholder.svg",
-      isFounder: false
-    }
-  ];
 
   const values = [
     {
@@ -124,32 +93,53 @@ const AboutPage = () => {
             </div>
           </div>
         );
-      case 'team':
+      case 'founder':
         return (
           <div className="py-16 bg-white">
             <div className="container mx-auto px-4">
-              <h2 className="text-3xl font-bold mb-12 text-center">L'équipe derrière SkillAfrik</h2>
+              <h2 className="text-3xl font-bold mb-12 text-center">Notre Fondateur</h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {teamMembers.map((member, index) => (
-                  <TeamMemberCard
-                    key={index}
-                    name={member.name}
-                    role={member.role}
-                    description={member.description}
-                    image={member.image}
-                    isFounder={member.isFounder}
-                  />
-                ))}
-              </div>
-              
-              <div className="mt-16 text-center">
-                <h3 className="text-2xl font-bold mb-4">Vous voulez rejoindre notre équipe ?</h3>
-                <Button asChild>
-                  <Link to="/carrieres" className="inline-block">
-                    Voir nos offres d'emploi
-                  </Link>
-                </Button>
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white rounded-lg shadow-xl overflow-hidden">
+                  <div className="md:flex">
+                    <div className="md:w-1/3">
+                      <img 
+                        src="/lovable-uploads/923cc5fa-78ac-4b7c-a4d6-539acd6632f3.png"
+                        alt="Mr LUCIEN KOUMESSI" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-8 md:w-2/3">
+                      <div className="uppercase tracking-wide text-orange-500 font-semibold">Fondateur & CEO</div>
+                      <h2 className="text-2xl font-bold mt-2 mb-2">Mr LUCIEN KOUMESSI</h2>
+                      <p className="text-gray-500 mb-4">Consultant commercial & Promoteur des entreprises internationaux</p>
+                      
+                      <div className="prose max-w-none">
+                        <p className="mb-3">
+                          Leader visionnaire avec plus de 10 ans d'expérience dans l'éducation et la technologie, en Afrique et à l'international.
+                        </p>
+                        <p className="mb-3">
+                          Consultant commercial avec 10 ans d'expérience en marketing et ventes, spécialisé dans la promotion des entreprises internationales.
+                        </p>
+                        <p className="mb-3">
+                          Sa vision pour SkillAfrik est née d'un constat simple mais puissant : malgré l'abondance de talents en Afrique, l'accès à une éducation de qualité reste un défi majeur pour de nombreuses personnes sur le continent.
+                        </p>
+                        <p>
+                          Grâce à son expertise et son réseau international, il a pu créer une plateforme qui répond aux besoins spécifiques du marché africain tout en offrant un contenu éducatif de qualité internationale.
+                        </p>
+                      </div>
+                      
+                      <div className="mt-6 flex space-x-4">
+                        <Button variant="default" size="sm">
+                          <Link to="/contact">Contacter</Link>
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <a href="https://linkedin.com/in/" target="_blank" rel="noreferrer">LinkedIn</a>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -226,7 +216,7 @@ const AboutPage = () => {
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl font-bold mb-4 text-white">À Propos de SkillAfrik</h1>
           <p className="text-gray-200 max-w-2xl mx-auto">
-            Découvrez notre mission, notre équipe et notre vision pour transformer l'éducation en Afrique et au-delà.
+            Découvrez notre mission, notre fondateur et notre vision pour transformer l'éducation en Afrique et au-delà.
           </p>
         </div>
       </section>
@@ -234,22 +224,22 @@ const AboutPage = () => {
       {/* Tabs Section */}
       <section className="bg-white py-8">
         <div className="container mx-auto px-4">
-          <div className="border-b border-gray-200 flex justify-center">
+          <div className="border-b border-gray-200 flex justify-center overflow-x-auto">
             <button 
               onClick={() => setActiveTab('mission')}
-              className={`px-6 py-3 font-medium ${activeTab === 'mission' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-6 py-3 font-medium whitespace-nowrap ${activeTab === 'mission' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Notre Mission
             </button>
             <button 
-              onClick={() => setActiveTab('team')}
-              className={`px-6 py-3 font-medium ${activeTab === 'team' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('founder')}
+              className={`px-6 py-3 font-medium whitespace-nowrap ${activeTab === 'founder' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-gray-700'}`}
             >
-              Notre Équipe
+              Notre Fondateur
             </button>
             <button 
               onClick={() => setActiveTab('values')}
-              className={`px-6 py-3 font-medium ${activeTab === 'values' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-6 py-3 font-medium whitespace-nowrap ${activeTab === 'values' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Nos Valeurs
             </button>

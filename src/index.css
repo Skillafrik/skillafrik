@@ -37,6 +37,8 @@
 
     --skillafrik-orange: 16 83% 55%;
     --skillafrik-orange-light: 16 83% 95%;
+    --skillafrik-blue: 215 100% 25%;
+    --sidebar-bg: 215 100% 25%;
   }
 
   * {
@@ -70,5 +72,60 @@
 
   .level-badge {
     @apply bg-gray-800 text-white text-xs px-2 py-1 rounded-md absolute top-2 left-2;
+  }
+
+  /* Styles de responsivité supplémentaires */
+  @media (max-width: 640px) {
+    h1 {
+      @apply text-2xl;
+    }
+    h2 {
+      @apply text-xl;
+    }
+    .container {
+      @apply px-4;
+    }
+  }
+
+  /* Sidebar styles */
+  .sidebar {
+    @apply bg-skillafrik-blue text-white;
+  }
+
+  /* Tab styles for admin settings */
+  .settings-tabs {
+    @apply overflow-x-auto whitespace-nowrap flex pb-2;
+  }
+
+  .settings-tab {
+    @apply px-4 py-2 font-medium text-sm cursor-pointer;
+  }
+
+  .settings-tab.active {
+    @apply border-b-2 border-orange-500 text-orange-500;
+  }
+
+  .settings-tab:not(.active) {
+    @apply text-gray-500 hover:text-gray-700;
+  }
+
+  /* Optimisation des images */
+  img {
+    @apply max-w-full h-auto;
+    object-fit: cover;
+  }
+
+  /* Table responsives */
+  .table-responsive {
+    @apply overflow-x-auto;
+  }
+
+  /* Classes pour les formulaires responsives */
+  .form-responsive {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  }
+
+  .form-full {
+    @apply md:col-span-2;
   }
 }

@@ -21,7 +21,7 @@ import TechnologiePage from "./pages/categories/TechnologiePage";
 import IAPage from "./pages/categories/IAPage";
 import MarketingPage from "./pages/categories/MarketingPage";
 
-// Admin Pages
+// Panel Pages
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
@@ -55,8 +55,8 @@ const App = () => (
         <Route path="/categories/ia" element={<IAPage />} />
         <Route path="/categories/marketing" element={<MarketingPage />} />
         
-        {/* Routes pour l'administration */}
-        <Route path="/admin" element={<AdminLayout />}>
+        {/* Routes pour le panel d'administration */}
+        <Route path="/panel" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="utilisateurs" element={<AdminUsers />} />
           <Route path="cours" element={<AdminCourses />} />
@@ -64,6 +64,10 @@ const App = () => (
           <Route path="affilies" element={<AdminAffiliates />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="parametres" element={<AdminSettings />} />
+          <Route path="parametres/paiements" element={<AdminSettings />} />
+          <Route path="parametres/notifications" element={<AdminSettings />} />
+          <Route path="parametres/securite" element={<AdminSettings />} />
+          <Route path="parametres/systeme" element={<AdminSettings />} />
         </Route>
         
         <Route path="*" element={<NotFound />} />
