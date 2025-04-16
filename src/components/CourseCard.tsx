@@ -10,7 +10,7 @@ interface CourseCardProps {
   reviewCount: number;
   price: number;
   originalPrice: number;
-  imageUrl: string;
+  imageUrl?: string;
   level: string;
   duration: number;
   students: number;
@@ -25,7 +25,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
   reviewCount,
   price,
   originalPrice,
-  imageUrl,
   level,
   duration,
   students,
@@ -34,14 +33,9 @@ const CourseCard: React.FC<CourseCardProps> = ({
 }) => {
   return (
     <div className="course-card h-full flex flex-col">
-      <div className="relative">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-48 object-cover"
-        />
-        {featured && <div className="badge">Mode hors ligne</div>}
-        {!featured && <div className="level-badge">{level}</div>}
+      <div className="relative bg-gray-100 h-32 flex items-center justify-center">
+        <div className="level-badge">{level}</div>
+        <div className="text-lg font-medium text-gray-500">{title.substring(0, 2).toUpperCase()}</div>
       </div>
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="font-bold text-lg mb-2 line-clamp-2">{title}</h3>
@@ -80,10 +74,10 @@ const CourseCard: React.FC<CourseCardProps> = ({
         </div>
         <div className="mt-auto">
           <div className="flex items-center mt-2">
-            <span className="font-bold text-lg">{price.toFixed(2)} €</span>
+            <span className="font-bold text-lg">{price.toLocaleString()} FCFA</span>
             {originalPrice > price && (
               <span className="text-gray-400 line-through text-sm ml-2">
-                {originalPrice.toFixed(2)} €
+                {originalPrice.toLocaleString()} FCFA
               </span>
             )}
           </div>

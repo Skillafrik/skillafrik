@@ -7,7 +7,7 @@ import CourseCard from '../components/CourseCard';
 import CourseTabs from '../components/CourseTabs';
 
 const CoursesPage = () => {
-  // Données fictives pour les cours
+  // Données fictives pour les cours avec prix en FCFA
   const courses = [
     {
       id: "1",
@@ -15,9 +15,8 @@ const CoursesPage = () => {
       instructor: "Dr. Aminata Diallo",
       rating: 4.8,
       reviewCount: 423,
-      price: 29.99,
-      originalPrice: 49.99,
-      imageUrl: "/lovable-uploads/282aaf7b-b5fc-491c-b6dc-946522da1cff.png",
+      price: 15000,
+      originalPrice: 25000,
       level: "Débutant",
       duration: 18,
       students: 3240
@@ -28,9 +27,8 @@ const CoursesPage = () => {
       instructor: "Emmanuel Odei",
       rating: 4.7,
       reviewCount: 315,
-      price: 39.99,
-      originalPrice: 69.99,
-      imageUrl: "/lovable-uploads/76515ee7-3b6b-48ff-bea1-6f548f18b6c1.png",
+      price: 20000,
+      originalPrice: 35000,
       level: "Intermédiaire",
       duration: 32,
       students: 2150
@@ -41,9 +39,8 @@ const CoursesPage = () => {
       instructor: "Fatou Ndiaye",
       rating: 4.9,
       reviewCount: 218,
-      price: 24.99,
-      originalPrice: 39.99,
-      imageUrl: "/lovable-uploads/2ae69fb7-b69a-4712-b671-9c113ae4904b.png",
+      price: 12500,
+      originalPrice: 20000,
       level: "Tous niveaux",
       duration: 14,
       students: 1876
@@ -54,9 +51,8 @@ const CoursesPage = () => {
       instructor: "Omar Sow",
       rating: 4.6,
       reviewCount: 189,
-      price: 34.99,
-      originalPrice: 59.99,
-      imageUrl: "/lovable-uploads/f17886cc-fb6d-42ee-ab0c-4fc0ac15222f.png",
+      price: 17500,
+      originalPrice: 30000,
       level: "Intermédiaire",
       duration: 20,
       students: 1520
@@ -67,9 +63,8 @@ const CoursesPage = () => {
       instructor: "Dr. Kofi Mensah",
       rating: 4.9,
       reviewCount: 156,
-      price: 29.99,
-      originalPrice: 44.99,
-      imageUrl: "/lovable-uploads/f96b3759-24d2-44dc-bfda-7933d2a85e6f.png",
+      price: 15000,
+      originalPrice: 22500,
       level: "Débutant",
       duration: 15,
       students: 980
@@ -80,9 +75,8 @@ const CoursesPage = () => {
       instructor: "Amina Toure",
       rating: 4.7,
       reviewCount: 112,
-      price: 49.99,
-      originalPrice: 79.99,
-      imageUrl: "/lovable-uploads/dc7bdddf-77c4-4b52-acff-4e1849f65f4a.png",
+      price: 25000,
+      originalPrice: 40000,
       level: "Avancé",
       duration: 25,
       students: 645
@@ -93,9 +87,8 @@ const CoursesPage = () => {
       instructor: "Jean-Pierre Kouassi",
       rating: 4.8,
       reviewCount: 98,
-      price: 34.99,
-      originalPrice: 54.99,
-      imageUrl: "/lovable-uploads/6223c4ac-466e-40ac-99b5-ccde004ece73.png",
+      price: 17500,
+      originalPrice: 27500,
       level: "Intermédiaire",
       duration: 12,
       students: 520
@@ -106,9 +99,8 @@ const CoursesPage = () => {
       instructor: "Nadia Ahmed",
       rating: 4.5,
       reviewCount: 76,
-      price: 39.99,
-      originalPrice: 49.99,
-      imageUrl: "/lovable-uploads/f1db26f4-4e64-460c-baf4-66653425c629.png",
+      price: 20000,
+      originalPrice: 25000,
       level: "Intermédiaire",
       duration: 16,
       students: 430

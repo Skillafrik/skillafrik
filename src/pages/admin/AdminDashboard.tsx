@@ -1,385 +1,263 @@
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Users, BookOpen, DollarSign, BarChart3, Activity } from "lucide-react";
-import { Line, Pie, LineChart, PieChart, ResponsiveContainer, Cell } from "recharts";
-import StatCard from "@/components/StatCard";
+import { useState } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  RefreshCcw,
+  Users,
+  BookOpen,
+  Award,
+  Share2,
+  AlertCircle,
+  CheckCircle
+} from "lucide-react";
+import { 
+  CartesianGrid, 
+  Line, 
+  LineChart, 
+  ResponsiveContainer, 
+  Tooltip, 
+  XAxis,
+  YAxis,
+  Sector,
+  PieChart,
+  Pie,
+  BarChart,
+  Bar,
+  Cell
+} from "recharts";
+import { useToast } from "@/components/ui/use-toast";
 
 const AdminDashboard = () => {
-  // Données factices pour les statistiques
-  const stats = [
-    { 
-      title: "Utilisateurs Actifs", 
-      value: "876", 
-      change: "+5%", 
-      icon: <Users className="h-8 w-8 text-blue-600" />
-    },
-    { 
-      title: "Cours Publiés", 
-      value: "74", 
-      change: "+8%", 
-      icon: <BookOpen className="h-8 w-8 text-orange-500" />
-    },
-    { 
-      title: "Revenu Mensuel", 
-      value: "5 230 500 FCFA", 
-      change: "+12%", 
-      icon: <DollarSign className="h-8 w-8 text-green-600" />
-    },
-    { 
-      title: "Revenu Total", 
-      value: "25 450 750 FCFA", 
-      change: "+15%", 
-      icon: <BarChart3 className="h-8 w-8 text-purple-600" />
-    },
-  ];
+  const { toast } = useToast();
+  const [stats, setStats] = useState({
+    totalUsers: 876,
+    totalCourses: 74,
+    totalRevenue: 5230500,
+    totalInstructors: 28,
+    totalAffiliates: 152
+  });
 
-  // Données pour le graphique des revenus mensuels
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+
+  // Données pour les graphiques
   const revenueData = [
-    { date: "01/04", revenue: 3200000, students: 120 },
-    { date: "02/04", revenue: 2800000, students: 95 },
-    { date: "03/04", revenue: 3500000, students: 145 },
-    { date: "04/04", revenue: 3000000, students: 135 },
-    { date: "05/04", revenue: 4200000, students: 180 },
-    { date: "06/04", revenue: 3800000, students: 165 },
-    { date: "07/04", revenue: 4500000, students: 200 },
-    { date: "08/04", revenue: 5000000, students: 230 },
-    { date: "09/04", revenue: 4800000, students: 210 },
-    { date: "10/04", revenue: 4300000, students: 190 },
+    { name: 'Jan', value: 300000 },
+    { name: 'Fév', value: 420000 },
+    { name: 'Mar', value: 380000 },
+    { name: 'Avr', value: 510000 },
+    { name: 'Mai', value: 680000 },
+    { name: 'Jun', value: 720000 },
+    { name: 'Jul', value: 850000 }
   ];
 
-  // Données pour la répartition par pays
-  const countryData = [
-    { name: "Nigeria", value: 320, fill: "#2563eb" },
-    { name: "Ghana", value: 215, fill: "#16a34a" },
-    { name: "Côte d'Ivoire", value: 185, fill: "#f59e0b" },
-    { name: "Sénégal", value: 98, fill: "#ef4444" },
-    { name: "Cameroun", value: 124, fill: "#8b5cf6" },
-    { name: "Autres pays", value: 216, fill: "#6b7280" },
+  const categoryData = [
+    { name: 'Business', value: 35 },
+    { name: 'Tech', value: 25 },
+    { name: 'Agriculture', value: 15 },
+    { name: 'IA', value: 10 },
+    { name: 'Marketing', value: 15 }
   ];
 
-  // Données pour les activités récentes
-  const recentActivities = [
-    {
-      name: "Kofi Anan",
-      action: "a acheté le cours 'Développement Web avec React'",
-      amount: "79,99 €",
-      date: "10/04",
-      time: "10:23",
-      avatar: "K",
-      color: "bg-purple-200 text-purple-600"
-    },
-    {
-      name: "Marie Diop",
-      action: "s'est inscrit sur la plateforme",
-      date: "10/04",
-      time: "09:45",
-      avatar: "M",
-      color: "bg-blue-200 text-blue-600"
-    },
-    {
-      name: "Fatima Mensah",
-      action: "a publié le cours 'Marketing Digital pour Entrepreneurs'",
-      date: "09/04",
-      time: "15:30",
-      avatar: "F",
-      color: "bg-green-200 text-green-600"
-    },
-    {
-      name: "Awa Cissé",
-      action: "a payé pour le cours 'Agriculture Durable en Afrique'",
-      amount: "69,99 €",
-      date: "09/04",
-      time: "11:20",
-      avatar: "A",
-      color: "bg-yellow-200 text-yellow-600"
-    },
-    {
-      name: "Amadou Kane",
-      action: "a rejoint le programme d'affiliation",
-      date: "08/04",
-      time: "14:15",
-      avatar: "A",
-      color: "bg-orange-200 text-orange-600"
-    },
+  const userGrowthData = [
+    { name: 'Jan', newUsers: 45, activeUsers: 120 },
+    { name: 'Fév', newUsers: 62, activeUsers: 150 },
+    { name: 'Mar', newUsers: 58, activeUsers: 170 },
+    { name: 'Avr', newUsers: 75, activeUsers: 200 },
+    { name: 'Mai', newUsers: 90, activeUsers: 220 },
+    { name: 'Jun', newUsers: 112, activeUsers: 280 },
+    { name: 'Jul', newUsers: 135, activeUsers: 340 }
   ];
 
-  // Données pour les cours populaires
-  const popularCourses = [
-    {
-      title: "Introduction à l'Entrepreneuriat Africain",
-      category: "Affaires",
-      level: "Débutant",
-      instructor: "Fatima Mensah",
-      price: "50 FCFA",
-      students: 245,
-      rating: 4.7,
-      status: "Publié"
-    },
-    {
-      title: "Développement Web avec React",
-      category: "Technologie",
-      level: "Intermédiaire",
-      instructor: "David Oyelowo",
-      price: "80 FCFA",
-      students: 189,
-      rating: 4.9,
-      status: "Publié"
-    },
-    {
-      title: "Marketing Digital pour Entrepreneurs",
-      category: "Affaires",
-      level: "Débutant",
-      instructor: "Fatima Mensah",
-      price: "60 FCFA",
-      students: 317,
-      rating: 4.6,
-      status: "Publié"
-    },
-    {
-      title: "Agriculture Durable en Afrique",
-      category: "Agriculture",
-      level: "Intermédiaire",
-      instructor: "Grace Akua",
-      price: "70 FCFA",
-      students: 124,
-      rating: 4.8,
-      status: "Publié"
-    },
-    {
-      title: "Cybersécurité pour Débutants",
-      category: "Technologie",
-      level: "Débutant",
-      instructor: "David Oyelowo",
-      price: "Gratuit",
-      students: 520,
-      rating: 4.5,
-      status: "Publié"
-    },
-  ];
+  // Couleurs pour les graphiques
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
+  const resetDashboard = () => {
+    setStats({
+      totalUsers: 0,
+      totalCourses: 0,
+      totalRevenue: 0,
+      totalInstructors: 0,
+      totalAffiliates: 0
+    });
+    
+    toast({
+      title: "Système réinitialisé",
+      description: "Toutes les statistiques ont été remises à zéro.",
+      variant: "success"
+    });
+    
+    setResetConfirmOpen(false);
+  };
+
+  const formatCurrency = (value: number) => {
+    return value.toLocaleString() + " FCFA";
+  };
 
   return (
-    <div className="space-y-8">
-      <h2 className="text-3xl font-bold">Tableau de bord</h2>
-      
-      {/* Cartes statistiques */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">{stat.title}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <span className="text-xs text-green-600 font-semibold">{stat.change} vs mois précédent</span>
-                </div>
-                <div>
-                  {stat.icon}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      
-      {/* Graphiques */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Revenus mensuels et Inscriptions</CardTitle>
-            <CardDescription>Évolution des revenus sur les 10 derniers jours</CardDescription>
-          </CardHeader>
-          <CardContent className="h-80">
-            <ChartContainer 
-              config={{
-                revenue: { color: "#2563eb", label: "Revenus" },
-                students: { color: "#10b981", label: "Étudiants" }
-              }}
-            >
-              <LineChart data={revenueData}>
-                <Line 
-                  type="monotone" 
-                  dataKey="revenue" 
-                  name="Revenus" 
-                  stroke="var(--color-revenue, #2563eb)" 
-                  strokeWidth={2} 
-                  dot={{ r: 4 }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="students" 
-                  name="Étudiants" 
-                  stroke="var(--color-students, #10b981)" 
-                  strokeWidth={2} 
-                  dot={{ r: 4 }}
-                  yAxisId="right"
-                />
-                <ChartTooltip content={<ChartTooltipContent />} />
-              </LineChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-      
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Distribution des utilisateurs</CardTitle>
-            <CardDescription>Répartition par pays</CardDescription>
-          </CardHeader>
-          <CardContent className="h-80">
-            <ChartContainer config={{}}>
-              <PieChart>
-                <Pie
-                  data={countryData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={90}
-                  paddingAngle={2}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                >
-                  {countryData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Pie>
-                <ChartTooltip content={<ChartTooltipContent />} />
-              </PieChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-      </div>
-      
-      {/* Activités récentes */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Activity className="mr-2 h-5 w-5" />
-              Activités récentes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {recentActivities.map((activity, index) => (
-                <div key={index} className="flex items-start space-x-4">
-                  <div className={`rounded-full w-10 h-10 flex items-center justify-center font-medium ${activity.color}`}>
-                    {activity.avatar}
-                  </div>
-                  <div className="space-y-1 flex-1">
-                    <div className="flex justify-between">
-                      <p className="font-medium">{activity.name}</p>
-                      <p className="text-sm text-gray-500">{activity.date} {activity.time}</p>
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      {activity.action} {activity.amount && <span className="font-semibold">{activity.amount}</span>}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 text-center">
-              <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                Voir toutes les activités
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h2 className="text-3xl font-bold">Tableau de bord</h2>
         
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Statistiques par pays</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {countryData.map((country, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div 
-                      className="w-3 h-3 rounded-full mr-2" 
-                      style={{ backgroundColor: country.fill }}
-                    />
-                    <span>{country.name}</span>
-                  </div>
-                  <span className="font-medium">{country.value} utilisateurs</span>
-                </div>
-              ))}
+        {resetConfirmOpen ? (
+          <div className="flex items-center gap-2">
+            <Button 
+              onClick={() => setResetConfirmOpen(false)}
+              variant="outline"
+              className="border-gray-300"
+            >
+              Annuler
+            </Button>
+            <Button 
+              onClick={resetDashboard}
+              variant="destructive"
+              className="flex items-center"
+            >
+              <CheckCircle className="mr-1 h-4 w-4" />
+              Confirmer la réinitialisation
+            </Button>
+          </div>
+        ) : (
+          <Button 
+            onClick={() => setResetConfirmOpen(true)}
+            variant="outline" 
+            className="flex items-center border-gray-300"
+          >
+            <RefreshCcw className="mr-2 h-4 w-4" />
+            Réinitialiser le système
+          </Button>
+        )}
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <Card>
+          <CardContent className="p-6 flex flex-col items-center">
+            <div className="bg-blue-100 p-3 rounded-full mb-4">
+              <Users className="h-6 w-6 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-medium mb-1">Utilisateurs</h3>
+            <p className="text-3xl font-bold">{stats.totalUsers.toLocaleString()}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6 flex flex-col items-center">
+            <div className="bg-orange-100 p-3 rounded-full mb-4">
+              <BookOpen className="h-6 w-6 text-orange-600" />
+            </div>
+            <h3 className="text-lg font-medium mb-1">Cours</h3>
+            <p className="text-3xl font-bold">{stats.totalCourses.toLocaleString()}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6 flex flex-col items-center">
+            <div className="bg-green-100 p-3 rounded-full mb-4">
+              <svg className="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium mb-1">Revenus</h3>
+            <p className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6 flex flex-col items-center">
+            <div className="bg-purple-100 p-3 rounded-full mb-4">
+              <Award className="h-6 w-6 text-purple-600" />
+            </div>
+            <h3 className="text-lg font-medium mb-1">Formateurs</h3>
+            <p className="text-3xl font-bold">{stats.totalInstructors.toLocaleString()}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6 flex flex-col items-center">
+            <div className="bg-pink-100 p-3 rounded-full mb-4">
+              <Share2 className="h-6 w-6 text-pink-600" />
+            </div>
+            <h3 className="text-lg font-medium mb-1">Affiliés</h3>
+            <p className="text-3xl font-bold">{stats.totalAffiliates.toLocaleString()}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Revenue Chart */}
+        <Card>
+          <CardContent className="p-6">
+            <h3 className="text-lg font-medium mb-6">Revenus mensuels</h3>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={revenueData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis tickFormatter={(value) => (value/1000) + 'k'} />
+                  <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                  <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* User Growth Chart */}
+        <Card>
+          <CardContent className="p-6">
+            <h3 className="text-lg font-medium mb-6">Croissance des utilisateurs</h3>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={userGrowthData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="newUsers" fill="#8884d8" name="Nouveaux utilisateurs" />
+                  <Bar dataKey="activeUsers" fill="#82ca9d" name="Utilisateurs actifs" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Category Distribution */}
+        <Card>
+          <CardContent className="p-6">
+            <h3 className="text-lg font-medium mb-6">Distribution des catégories</h3>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={categoryData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    nameKey="name"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {categoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => `${value}%`} />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
       </div>
-      
-      {/* Tableau des cours */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Cours</CardTitle>
-            <CardDescription>Liste des cours les plus populaires</CardDescription>
-          </div>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center text-sm">
-            <span className="mr-1">+</span> Ajouter un cours
-          </button>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Titre</TableHead>
-                  <TableHead>Formateur</TableHead>
-                  <TableHead>Prix</TableHead>
-                  <TableHead>Étudiants</TableHead>
-                  <TableHead>Note</TableHead>
-                  <TableHead>Statut</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {popularCourses.map((course, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      <div>
-                        <div className="font-medium">{course.title}</div>
-                        <div className="text-xs text-gray-500">{course.category} • {course.level}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{course.instructor}</TableCell>
-                    <TableCell>{course.price}</TableCell>
-                    <TableCell>{course.students}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center">
-                        <span className="text-yellow-500 mr-1">★</span> 
-                        <span>{course.rating}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                        {course.status}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <button className="text-gray-400 hover:text-gray-600">
-                        •••
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-          <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-            <span>Affichage de 1 à 5 sur 32 entrées</span>
-            <div className="flex space-x-1">
-              <button className="px-3 py-1 rounded border text-black bg-white">1</button>
-              <button className="px-3 py-1 rounded border hover:bg-gray-50">2</button>
-              <button className="px-3 py-1 rounded border hover:bg-gray-50">3</button>
-              <button className="px-3 py-1 rounded border hover:bg-gray-50">4</button>
-              <button className="px-3 py-1 rounded border hover:bg-gray-50">5</button>
-              <button className="px-3 py-1 rounded border hover:bg-gray-50">»</button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

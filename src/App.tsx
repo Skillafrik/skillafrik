@@ -12,6 +12,8 @@ import AffiliationRegistrationPage from "./pages/AffiliationRegistrationPage";
 import PartnershipPage from "./pages/PartnershipPage";
 import PartnerRegistrationPage from "./pages/PartnerRegistrationPage";
 import LoginPage from "./pages/LoginPage";
+import InscriptionPage from "./pages/InscriptionPage";
+import DevenirFormateurPage from "./pages/DevenirFormateurPage";
 import NotFound from "./pages/NotFound";
 
 // Categories Pages
@@ -47,6 +49,8 @@ const App = () => (
         <Route path="/partenaire" element={<PartnershipPage />} />
         <Route path="/partenaire/inscription" element={<PartnerRegistrationPage />} />
         <Route path="/connexion" element={<LoginPage />} />
+        <Route path="/inscription" element={<InscriptionPage />} />
+        <Route path="/devenir-formateur" element={<DevenirFormateurPage />} />
         
         {/* Routes pour les catégories */}
         <Route path="/categories/business" element={<BusinessPage />} />

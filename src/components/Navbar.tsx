@@ -63,7 +63,7 @@ const Navbar = () => {
 
   return (
     <header className="border-b border-gray-100 bg-white sticky top-0 z-40">
-      <div className="container mx-auto flex justify-between items-center h-16 px-4">
+      <div className="container mx-auto flex items-center h-16 px-4 justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
             <div className="bg-orange-500 text-white font-bold rounded w-8 h-8 flex items-center justify-center mr-1">S</div>
@@ -72,7 +72,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-6">
+        <nav className="hidden md:flex items-center space-x-6">
           <Link to="/cours" className="text-gray-600 hover:text-gray-900">Cours</Link>
           
           <NavigationMenu>
@@ -101,8 +101,7 @@ const Navbar = () => {
           </NavigationMenu>
           
           <Link to="/affiliation" className="text-gray-600 hover:text-gray-900">Affiliation</Link>
-          <Link to="/partenaire" className="text-gray-600 hover:text-gray-900">Partenaires</Link>
-          <Link to="/a-propos" className="text-gray-600 hover:text-gray-900">A propos</Link>
+          <Link to="/a-propos" className="text-gray-600 hover:text-gray-900">À propos</Link>
         </nav>
 
         {/* Desktop Auth Buttons */}
@@ -147,8 +146,7 @@ const Navbar = () => {
             </DropdownMenu>
             
             <Link to="/affiliation" className="block py-2 text-gray-600">Affiliation</Link>
-            <Link to="/partenaire" className="block py-2 text-gray-600">Partenaires</Link>
-            <Link to="/a-propos" className="block py-2 text-gray-600">A propos</Link>
+            <Link to="/a-propos" className="block py-2 text-gray-600">À propos</Link>
             
             <div className="flex flex-col space-y-2 pt-4 border-t border-gray-100">
               <Link to="/connexion" className="text-center py-2 text-gray-600">

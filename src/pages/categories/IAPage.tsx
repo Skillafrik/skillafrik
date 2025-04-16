@@ -6,7 +6,7 @@ import SearchBar from '../../components/SearchBar';
 import { Brain } from 'lucide-react';
 
 const IAPage = () => {
-  // Données fictives pour les cours d'IA
+  // Données fictives pour les cours d'IA avec prix en FCFA
   const iaCourses = [
     {
       id: "6",
@@ -14,9 +14,8 @@ const IAPage = () => {
       instructor: "Amina Toure",
       rating: 4.7,
       reviewCount: 112,
-      price: 49.99,
-      originalPrice: 79.99,
-      imageUrl: "/lovable-uploads/dc7bdddf-77c4-4b52-acff-4e1849f65f4a.png",
+      price: 25000,
+      originalPrice: 40000,
       level: "Avancé",
       duration: 25,
       students: 645
@@ -27,9 +26,8 @@ const IAPage = () => {
       instructor: "Dr. Kwame Osei",
       rating: 4.9,
       reviewCount: 87,
-      price: 54.99,
-      originalPrice: 89.99,
-      imageUrl: "/lovable-uploads/dc7bdddf-77c4-4b52-acff-4e1849f65f4a.png",
+      price: 27500,
+      originalPrice: 45000,
       level: "Avancé",
       duration: 30,
       students: 412
@@ -40,9 +38,8 @@ const IAPage = () => {
       instructor: "Sofia Mendes",
       rating: 4.8,
       reviewCount: 63,
-      price: 44.99,
-      originalPrice: 69.99,
-      imageUrl: "/lovable-uploads/dc7bdddf-77c4-4b52-acff-4e1849f65f4a.png",
+      price: 22500,
+      originalPrice: 35000,
       level: "Intermédiaire",
       duration: 18,
       students: 378
@@ -57,22 +54,15 @@ const IAPage = () => {
       <section className="bg-gradient-to-r from-purple-50 to-purple-100 py-16">
         <div className="container mx-auto px-4 text-center md:text-left">
           <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-2/3">
-              <div className="flex items-center mb-4">
+            <div className="w-full">
+              <div className="flex items-center mb-4 justify-center md:justify-start">
                 <Brain className="h-8 w-8 text-purple-600 mr-2" />
                 <h1 className="text-3xl font-bold">Intelligence Artificielle</h1>
               </div>
-              <p className="text-gray-600 mb-8 max-w-2xl">
+              <p className="text-gray-600 mb-8 max-w-2xl mx-auto md:mx-0">
                 Explorez le potentiel transformateur de l'IA et apprenez à développer des solutions innovantes pour les défis africains.
               </p>
               <SearchBar />
-            </div>
-            <div className="md:w-1/3 mt-6 md:mt-0">
-              <img 
-                src="/lovable-uploads/dc7bdddf-77c4-4b52-acff-4e1849f65f4a.png" 
-                alt="Intelligence Artificielle" 
-                className="rounded-lg shadow-md"
-              />
             </div>
           </div>
         </div>
