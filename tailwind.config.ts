@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -65,6 +64,11 @@ export default {
           800: '#9a3117',
           900: '#7b2d19',
         },
+        skillafrik: {
+          blue: 'hsl(var(--skillafrik-blue))',
+          orange: 'hsl(var(--skillafrik-orange))',
+          'orange-light': 'hsl(var(--skillafrik-orange-light))'
+        }
       },
       borderRadius: {
         lg: 'var(--radius)',
