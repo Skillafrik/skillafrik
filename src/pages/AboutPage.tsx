@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -164,24 +163,29 @@ const AboutPage = () => {
                 ))}
               </div>
               
-              <div className="mt-16 bg-orange-50 rounded-lg p-8 shadow-sm">
-                <div className="flex flex-col md:flex-row items-center">
-                  <div className="md:w-full mb-6 md:mb-0">
-                    <h3 className="text-xl font-bold mb-4 flex items-center">
-                      <Heart className="h-5 w-5 text-orange-500 mr-2" />
-                      Rejoignez-nous
-                    </h3>
-                    <p className="text-gray-600 mb-4">
-                      Devenez formateur ou partenaire et contribuez à notre mission d'éducation accessible en Afrique.
-                    </p>
-                    <div className="space-x-4">
-                      <Button asChild variant="default" size="sm">
-                        <Link to="/partenaire">Devenir partenaire</Link>
-                      </Button>
-                      <Button asChild variant="outline" size="sm">
-                        <Link to="/formateur">Devenir formateur</Link>
-                      </Button>
-                    </div>
+              <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <img 
+                    src="/lovable-uploads/baa46c38-7b33-4945-b43d-5714be2704cd.png" 
+                    alt="SkillAfrik Technology Vision" 
+                    className="rounded-lg shadow-md w-full h-auto"
+                  />
+                </div>
+                <div className="mt-16 bg-orange-50 rounded-lg p-8 shadow-sm">
+                  <h3 className="text-xl font-bold mb-4 flex items-center">
+                    <Heart className="h-5 w-5 text-orange-500 mr-2" />
+                    Rejoignez-nous
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Devenez formateur ou partenaire et contribuez à notre mission d'éducation accessible en Afrique.
+                  </p>
+                  <div className="space-x-4">
+                    <Button asChild variant="default" size="sm">
+                      <Link to="/partenaire">Devenir partenaire</Link>
+                    </Button>
+                    <Button asChild variant="outline" size="sm">
+                      <Link to="/formateur">Devenir formateur</Link>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -197,7 +201,6 @@ const AboutPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      {/* Hero Section avec l'image d'Afrique AI en arrière-plan */}
       <section 
         className="bg-cover bg-center py-16"
         style={{ 
@@ -214,7 +217,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Tabs Section */}
       <section className="bg-white py-8">
         <div className="container mx-auto px-4">
           <div className="border-b border-gray-200 flex justify-center overflow-x-auto">
@@ -240,7 +242,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Content based on active tab */}
       {renderTabContent()}
 
       <Footer />
