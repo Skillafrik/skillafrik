@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -84,7 +83,7 @@ const AdminDashboard = () => {
     toast({
       title: "Système réinitialisé",
       description: "Toutes les statistiques ont été remises à zéro.",
-      variant: "success"
+      variant: "default"
     });
     
     setResetConfirmOpen(false);

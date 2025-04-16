@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -88,7 +87,7 @@ const InscriptionPage = () => {
         toast({
           title: "Inscription réussie!",
           description: "Votre compte a été créé avec succès.",
-          variant: "success"
+          variant: "default"
         });
         
         navigate('/connexion');

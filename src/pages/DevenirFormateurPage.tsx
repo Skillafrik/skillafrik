@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -104,7 +103,7 @@ const DevenirFormateurPage = () => {
         toast({
           title: "Demande envoyée!",
           description: "Nous examinerons votre candidature et vous contacterons prochainement.",
-          variant: "success"
+          variant: "default"
         });
         
         navigate('/');
