@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Users, BookOpen, DollarSign, BarChart3, Activity } from "lucide-react";
-import { Line, Pie, LineChart, PieChart, ResponsiveContainer, Cell, PieSector } from "recharts";
+import { Line, Pie, LineChart, PieChart, ResponsiveContainer, Cell } from "recharts";
 import StatCard from "@/components/StatCard";
 
 const AdminDashboard = () => {
