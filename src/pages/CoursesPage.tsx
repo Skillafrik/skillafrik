@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 import SearchBar from '../components/SearchBar';
 import CourseCard from '../components/CourseCard';
 import CourseTabs from '../components/CourseTabs';
-import { useCourses } from '../utils/courseStorage';
+import { useCourses } from '../contexts/CourseContext';
 import { toast } from '../components/ui/use-toast';
 
 const CoursesPage = () => {

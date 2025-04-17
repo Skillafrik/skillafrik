@@ -5,7 +5,7 @@ import Footer from '../../components/Footer';
 import CourseCard from '../../components/CourseCard';
 import SearchBar from '../../components/SearchBar';
 import { Brain } from 'lucide-react';
-import { useCourses } from '../../utils/courseStorage';
+import { useCourses } from '../../contexts/CourseContext';
 
 const IAPage = () => {
   const { getCoursesByCategory } = useCourses();

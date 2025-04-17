@@ -15,7 +15,7 @@ import LoginPage from "./pages/LoginPage";
 import InscriptionPage from "./pages/InscriptionPage";
 import DevenirFormateurPage from "./pages/DevenirFormateurPage";
 import NotFound from "./pages/NotFound";
-import { CourseProvider } from "./utils/courseStorage";
+import { CourseProvider } from "./contexts/CourseContext";
 
 // Categories Pages
 import BusinessPage from "./pages/categories/BusinessPage";
