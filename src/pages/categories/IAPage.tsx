@@ -1,52 +1,19 @@
 
+import { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import CourseCard from '../../components/CourseCard';
 import SearchBar from '../../components/SearchBar';
 import { Brain } from 'lucide-react';
+import { useCourses } from '../../utils/courseStorage';
 
 const IAPage = () => {
-  // Données fictives pour les cours d'IA avec prix en FCFA
-  const iaCourses = [
-    {
-      id: "6",
-      title: "Intelligence Artificielle: Applications Pratiques",
-      instructor: "Amina Toure",
-      rating: 4.7,
-      reviewCount: 112,
-      price: 25000,
-      originalPrice: 125000,
-      level: "Avancé",
-      duration: 25,
-      students: 645,
-      imageUrl: "/lovable-uploads/ae605dec-9ca4-4a78-8ed7-7a0dadbadc30.png",
-      externalUrl: "https://skillafrik.mychariow.com/prd_pycgdm"
-    },
-    {
-      id: "ia1",
-      title: "Machine Learning pour la Santé en Afrique",
-      instructor: "Dr. Kwame Osei",
-      rating: 4.9,
-      reviewCount: 87,
-      price: 27500,
-      originalPrice: 45000,
-      level: "Avancé",
-      duration: 30,
-      students: 412
-    },
-    {
-      id: "ia2",
-      title: "Introduction aux Grands Modèles de Langage (LLM)",
-      instructor: "Sofia Mendes",
-      rating: 4.8,
-      reviewCount: 63,
-      price: 22500,
-      originalPrice: 35000,
-      level: "Intermédiaire",
-      duration: 18,
-      students: 378
-    }
-  ];
+  const { getCoursesByCategory } = useCourses();
+  const [iaCourses, setIaCourses] = useState(getCoursesByCategory('IA'));
+  
+  useEffect(() => {
+    setIaCourses(getCoursesByCategory('IA'));
+  }, [getCoursesByCategory]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -75,14 +42,21 @@ const IAPage = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-6">Cours populaires dans cette catégorie</h2>
           
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {iaCourses.map((course) => (
-              <CourseCard
-                key={course.id}
-                {...course}
-              />
-            ))}
-          </div>
+          {iaCourses.length > 0 ? (
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {iaCourses.map((course) => (
+                <CourseCard
+                  key={course.id}
+                  {...course}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 text-center py-12 border border-dashed border-gray-300 rounded-lg">
+              <h3 className="text-xl font-medium text-gray-600">Aucun cours disponible actuellement</h3>
+              <p className="text-gray-500 mt-2">Revenez bientôt pour découvrir nos nouveaux cours d'IA</p>
+            </div>
+          )}
         </div>
       </section>
       

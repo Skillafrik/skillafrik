@@ -1,114 +1,71 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SearchBar from '../components/SearchBar';
 import CourseCard from '../components/CourseCard';
 import CourseTabs from '../components/CourseTabs';
+import { useCourses } from '../utils/courseStorage';
+import { toast } from '../components/ui/use-toast';
 
 const CoursesPage = () => {
-  // Données fictives pour les cours avec prix en FCFA
-  const courses = [
-    {
-      id: "1",
-      title: "Introduction à l'entrepreneuriat en Afrique",
-      instructor: "Dr. Aminata Diallo",
-      rating: 4.8,
-      reviewCount: 423,
-      price: 15000,
-      originalPrice: 25000,
-      level: "Débutant",
-      duration: 18,
-      students: 3240
-    },
-    {
-      id: "2",
-      title: "Développement Web Full-Stack avec React et Node.js",
-      instructor: "Emmanuel Odei",
-      rating: 4.7,
-      reviewCount: 315,
-      price: 20000,
-      originalPrice: 35000,
-      level: "Intermédiaire",
-      duration: 32,
-      students: 2150
-    },
-    {
-      id: "3",
-      title: "Design Graphique pour les Entrepreneurs Africains",
-      instructor: "Fatou Ndiaye",
-      rating: 4.9,
-      reviewCount: 218,
-      price: 12500,
-      originalPrice: 20000,
-      level: "Tous niveaux",
-      duration: 14,
-      students: 1876
-    },
-    {
-      id: "4",
-      title: "Marketing Digital: Stratégies pour le Marché Africain",
-      instructor: "Omar Sow",
-      rating: 4.6,
-      reviewCount: 189,
-      price: 17500,
-      originalPrice: 30000,
-      level: "Intermédiaire",
-      duration: 20,
-      students: 1520
-    },
-    {
-      id: "5",
-      title: "Agriculture Durable en Afrique Subsaharienne",
-      instructor: "Dr. Kofi Mensah",
-      rating: 4.9,
-      reviewCount: 156,
-      price: 15000,
-      originalPrice: 22500,
-      level: "Débutant",
-      duration: 15,
-      students: 980
-    },
-    {
-      id: "6",
-      title: "Intelligence Artificielle: Applications Pratiques",
-      instructor: "Amina Toure",
-      rating: 4.7,
-      reviewCount: 112,
-      price: 25000,
-      originalPrice: 40000,
-      level: "Avancé",
-      duration: 25,
-      students: 645
-    },
-    {
-      id: "7",
-      title: "Gestion de Projet Agile pour Startups",
-      instructor: "Jean-Pierre Kouassi",
-      rating: 4.8,
-      reviewCount: 98,
-      price: 17500,
-      originalPrice: 27500,
-      level: "Intermédiaire",
-      duration: 12,
-      students: 520
-    },
-    {
-      id: "8",
-      title: "Finance pour Entrepreneurs Africains",
-      instructor: "Nadia Ahmed",
-      rating: 4.5,
-      reviewCount: 76,
-      price: 20000,
-      originalPrice: 25000,
-      level: "Intermédiaire",
-      duration: 16,
-      students: 430
-    }
-  ];
-
+  const { getPublishedCourses } = useCourses();
+  const [courses, setCourses] = useState(getPublishedCourses());
+  const [searchTerm, setSearchTerm] = useState("");
+  
   const tabs = ["Tous les cours", "Les plus populaires", "Nouveautés", "Cours gratuits"];
   const [activeTab, setActiveTab] = useState("Tous les cours");
+  
+  useEffect(() => {
+    // Refresh courses when the component mounts
+    setCourses(getPublishedCourses());
+  }, [getPublishedCourses]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    if (!term.trim()) {
+      setCourses(getPublishedCourses());
+      return;
+    }
+    
+    const filtered = getPublishedCourses().filter(course => 
+      course.title.toLowerCase().includes(term.toLowerCase()) ||
+      course.instructor.toLowerCase().includes(term.toLowerCase()) ||
+      course.level.toLowerCase().includes(term.toLowerCase()) ||
+      course.category.toLowerCase().includes(term.toLowerCase())
+    );
+    
+    setCourses(filtered);
+    
+    if (filtered.length === 0) {
+      toast({
+        title: "Aucun résultat",
+        description: `Aucun cours ne correspond à "${term}"`,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    
+    const allCourses = getPublishedCourses();
+    
+    switch(tab) {
+      case "Les plus populaires":
+        setCourses([...allCourses].sort((a, b) => b.students - a.students));
+        break;
+      case "Nouveautés":
+        // In a real app, you would sort by date. Here we'll just simulate it
+        setCourses([...allCourses].sort((a, b) => b.id.localeCompare(a.id)));
+        break;
+      case "Cours gratuits":
+        setCourses(allCourses.filter(course => course.price === 0));
+        break;
+      default:
+        setCourses(allCourses);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -121,7 +78,15 @@ const CoursesPage = () => {
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
             Développez vos compétences avec notre sélection de cours de haute qualité, conçus spécifiquement pour répondre aux besoins du marché africain.
           </p>
-          <SearchBar />
+          <div className="max-w-md mx-auto">
+            <input
+              type="text"
+              placeholder="Rechercher des cours..."
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+          </div>
         </div>
       </section>
 
@@ -129,16 +94,27 @@ const CoursesPage = () => {
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           {/* Course filters/tabs */}
-          <CourseTabs tabs={tabs} defaultTab="Tous les cours" />
+          <CourseTabs 
+            tabs={tabs} 
+            defaultTab="Tous les cours" 
+            onTabChange={handleTabChange}
+          />
           
           {/* Course grid */}
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {courses.map((course) => (
-              <CourseCard
-                key={course.id}
-                {...course}
-              />
-            ))}
+            {courses.length > 0 ? (
+              courses.map((course) => (
+                <CourseCard
+                  key={course.id}
+                  {...course}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <h3 className="text-xl font-medium text-gray-600">Aucun cours trouvé</h3>
+                <p className="text-gray-500 mt-2">Essayez de modifier vos critères de recherche</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

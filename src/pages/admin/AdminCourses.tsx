@@ -1,9 +1,9 @@
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Search, Filter, MoreHorizontal, Star, Edit, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { PlusCircle, Search, Filter, MoreHorizontal, Star, Edit, ExternalLink, Trash2, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   DropdownMenu,
@@ -11,126 +11,86 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useCourses } from "@/utils/courseStorage";
+import { toast } from "@/components/ui/use-toast";
 
 const AdminCourses = () => {
+  const { courses, deleteCourse, refreshCourses } = useCourses();
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("Tous");
+  const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
+  const [filteredCourses, setFilteredCourses] = useState(courses);
 
-  // Données factices pour les cours
-  const courses = [
-    {
-      id: 1,
-      title: "Introduction à l'Entrepreneuriat Africain",
-      category: "Affaires",
-      level: "Débutant",
-      instructor: "Fatima Mensah",
-      price: "50 FCFA",
-      students: 245,
-      rating: 4.7,
-      status: "published",
-      externalUrl: ""
-    },
-    {
-      id: 2,
-      title: "Développement Web avec React",
-      category: "Technologie",
-      level: "Intermédiaire",
-      instructor: "David Oyelowo",
-      price: "80 FCFA",
-      students: 189,
-      rating: 4.9,
-      status: "published",
-      externalUrl: ""
-    },
-    {
-      id: 3,
-      title: "Marketing Digital pour Entrepreneurs",
-      category: "Affaires",
-      level: "Débutant",
-      instructor: "Fatima Mensah",
-      price: "60 FCFA",
-      students: 317,
-      rating: 4.6,
-      status: "published",
-      externalUrl: ""
-    },
-    {
-      id: 4,
-      title: "Agriculture Durable en Afrique",
-      category: "Agriculture",
-      level: "Intermédiaire",
-      instructor: "Grace Akua",
-      price: "70 FCFA",
-      students: 124,
-      rating: 4.8,
-      status: "published",
-      externalUrl: ""
-    },
-    {
-      id: 5,
-      title: "Cybersécurité pour Débutants",
-      category: "Technologie",
-      level: "Débutant",
-      instructor: "David Oyelowo",
-      price: "Gratuit",
-      students: 520,
-      rating: 4.5,
-      status: "published",
-      externalUrl: ""
-    },
-    {
-      id: 6,
-      title: "Intelligence Artificielle: Applications Pratiques",
-      category: "IA",
-      level: "Avancé",
-      instructor: "Amina Toure",
-      price: "25000 FCFA",
-      students: 78,
-      rating: 4.7,
-      status: "published",
-      externalUrl: "https://skillafrik.mychariow.com/prd_pycgdm"
-    },
-    {
-      id: 7,
-      title: "Gestion d'Entreprise en Afrique",
-      category: "Affaires",
-      level: "Intermédiaire",
-      instructor: "Moussa Sow",
-      price: "65 FCFA",
-      students: 0,
-      rating: 0,
-      status: "draft",
-      externalUrl: ""
-    },
-  ];
-
-  // Filtres disponibles
+  // Filters available
   const filters = ["Tous", "Publié", "Brouillon", "Affaires", "Technologie", "Agriculture", "IA", "Marketing"];
-
-  // Fonction pour filtrer les cours
-  const filteredCourses = courses.filter(course => {
-    // Filtrer par requête de recherche
-    const matchesQuery = course.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
+  
+  useEffect(() => {
+    // Apply filters whenever courses change
+    filterCourses();
+  }, [courses, searchQuery, filter]);
+  
+  // Function to filter courses
+  const filterCourses = () => {
+    let filtered = [...courses];
     
-    // Filtrer par type de cours
-    const matchesFilter = 
-      filter === "Tous" ? true : 
-      filter === "Publié" ? course.status === "published" :
-      filter === "Brouillon" ? course.status === "draft" :
-      course.category === filter;
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(course => 
+        course.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        course.instructor.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
     
-    return matchesQuery && matchesFilter;
-  });
+    // Filter by category or status
+    if (filter !== "Tous") {
+      filtered = filtered.filter(course => 
+        filter === "Publié" ? course.status === "published" :
+        filter === "Brouillon" ? course.status === "draft" :
+        course.category === filter
+      );
+    }
+    
+    setFilteredCourses(filtered);
+  };
 
-  // Générer le style pour le badge de statut
+  const handleDeleteCourse = (id: string) => {
+    const success = deleteCourse(id);
+    
+    if (success) {
+      toast({
+        title: "Cours supprimé",
+        description: "Le cours a été supprimé avec succès.",
+      });
+      refreshCourses();
+    } else {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression du cours.",
+        variant: "destructive",
+      });
+    }
+    
+    setCourseToDelete(null);
+  };
+
+  // Generate style for status badge
   const getStatusBadgeStyle = (status: string) => {
     return status === "published" 
       ? "bg-green-100 text-green-800" 
       : "bg-yellow-100 text-yellow-800";
   };
 
-  // Formater le statut pour l'affichage
+  // Format status for display
   const formatStatus = (status: string) => {
     return status === "published" ? "Publié" : "Brouillon";
   };
@@ -195,76 +155,116 @@ const AdminCourses = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCourses.map((course) => (
-                  <TableRow key={course.id}>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{course.title}</div>
-                        <div className="text-xs text-gray-500">Niveau: {course.level}</div>
+                {filteredCourses.length > 0 ? (
+                  filteredCourses.map((course) => (
+                    <TableRow key={course.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{course.title}</div>
+                          <div className="text-xs text-gray-500">Niveau: {course.level}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className="px-2 py-1 rounded-full text-xs bg-gray-100">
+                          {course.category}
+                        </span>
+                      </TableCell>
+                      <TableCell>{course.instructor}</TableCell>
+                      <TableCell>{course.price.toLocaleString()} FCFA</TableCell>
+                      <TableCell>{course.students}</TableCell>
+                      <TableCell>
+                        {course.rating > 0 ? (
+                          <div className="flex items-center">
+                            <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                            <span className="ml-1">{course.rating}</span>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400">N/A</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded-full text-xs ${getStatusBadgeStyle(course.status)}`}>
+                          {formatStatus(course.status)}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                              <Link to={`/panel/cours/${course.id}`}>
+                                <Edit className="mr-2 h-4 w-4" /> Modifier
+                              </Link>
+                            </DropdownMenuItem>
+                            {course.externalUrl && (
+                              <DropdownMenuItem asChild>
+                                <a href={course.externalUrl} target="_blank" rel="noopener noreferrer">
+                                  <ExternalLink className="mr-2 h-4 w-4" /> Voir URL externe
+                                </a>
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem 
+                              onClick={() => setCourseToDelete(course.id)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" /> Supprimer
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8} className="h-24 text-center">
+                      <div className="flex flex-col items-center justify-center">
+                        <AlertCircle className="h-8 w-8 text-gray-400 mb-2" />
+                        <p className="text-gray-500">Aucun cours trouvé</p>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <span className="px-2 py-1 rounded-full text-xs bg-gray-100">
-                        {course.category}
-                      </span>
-                    </TableCell>
-                    <TableCell>{course.instructor}</TableCell>
-                    <TableCell>{course.price}</TableCell>
-                    <TableCell>{course.students}</TableCell>
-                    <TableCell>
-                      {course.rating > 0 ? (
-                        <div className="flex items-center">
-                          <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                          <span className="ml-1">{course.rating}</span>
-                        </div>
-                      ) : (
-                        <span className="text-gray-400">N/A</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs ${getStatusBadgeStyle(course.status)}`}>
-                        {formatStatus(course.status)}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link to={`/panel/cours/${course.id}`}>
-                              <Edit className="mr-2 h-4 w-4" /> Modifier
-                            </Link>
-                          </DropdownMenuItem>
-                          {course.externalUrl && (
-                            <DropdownMenuItem asChild>
-                              <a href={course.externalUrl} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="mr-2 h-4 w-4" /> Voir URL externe
-                              </a>
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </div>
 
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-            <span>Affichage de 1 à {filteredCourses.length} sur {filteredCourses.length} entrées</span>
-            <div className="flex space-x-1">
-              <button className="px-3 py-1 rounded border text-black bg-white">1</button>
-              <button className="px-3 py-1 rounded border hover:bg-gray-50">2</button>
-              <button className="px-3 py-1 rounded border hover:bg-gray-50">»</button>
+          {filteredCourses.length > 0 && (
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+              <span>Affichage de 1 à {filteredCourses.length} sur {filteredCourses.length} entrées</span>
+              <div className="flex space-x-1">
+                <button className="px-3 py-1 rounded border text-black bg-white">1</button>
+                <button className="px-3 py-1 rounded border hover:bg-gray-50">2</button>
+                <button className="px-3 py-1 rounded border hover:bg-gray-50">»</button>
+              </div>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Confirmation Dialog for Course Deletion */}
+      <AlertDialog open={!!courseToDelete} onOpenChange={() => setCourseToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action est irréversible. Le cours sera définitivement supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => courseToDelete && handleDeleteCourse(courseToDelete)}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

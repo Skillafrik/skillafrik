@@ -1,31 +1,37 @@
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-interface TabProps {
+interface CourseTabsProps {
   tabs: string[];
-  defaultTab?: string;
+  defaultTab: string;
+  onTabChange?: (tab: string) => void;
 }
 
-const CourseTabs = ({ tabs, defaultTab = tabs[0] }: TabProps) => {
+const CourseTabs: React.FC<CourseTabsProps> = ({ tabs, defaultTab, onTabChange }) => {
   const [activeTab, setActiveTab] = useState(defaultTab);
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    if (onTabChange) {
+      onTabChange(tab);
+    }
+  };
+
   return (
-    <div className="border-b border-gray-200">
-      <div className="flex overflow-x-auto">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-medium whitespace-nowrap ${
-              activeTab === tab
-                ? 'text-orange-500 border-b-2 border-orange-500'
-                : 'text-gray-600 hover:text-gray-900'
+    <div className="flex flex-wrap gap-2 border-b overflow-x-auto">
+      {tabs.map((tab) => (
+        <button
+          key={tab}
+          className={`px-4 py-2 font-medium text-sm whitespace-nowrap transition-colors
+            ${activeTab === tab
+              ? "border-b-2 border-orange-500 text-orange-600"
+              : "text-gray-600 hover:text-orange-600"
             }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+          onClick={() => handleTabChange(tab)}
+        >
+          {tab}
+        </button>
+      ))}
     </div>
   );
 };

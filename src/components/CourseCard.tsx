@@ -2,6 +2,7 @@
 import React from 'react';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Button } from "@/components/ui/button";
 
 interface CourseCardProps {
   title: string;
@@ -35,12 +36,14 @@ const CourseCard: React.FC<CourseCardProps> = ({
   externalUrl,
 }) => {
   return (
-    <div className="course-card h-full flex flex-col">
-      <div className="relative bg-gray-100 h-32 flex items-center justify-center">
+    <div className="course-card h-full flex flex-col shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <div className="relative bg-gray-100 h-44 flex items-center justify-center">
         {imageUrl ? (
           <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
         ) : (
-          <div className="text-lg font-medium text-gray-500">{title.substring(0, 2).toUpperCase()}</div>
+          <div className="text-lg font-medium text-gray-500 bg-gray-200 h-full w-full flex items-center justify-center">
+            {title.substring(0, 2).toUpperCase()}
+          </div>
         )}
         <div className="absolute top-2 left-2 bg-orange-500 text-white px-2 py-0.5 text-xs rounded">{level}</div>
       </div>
@@ -88,22 +91,30 @@ const CourseCard: React.FC<CourseCardProps> = ({
               </span>
             )}
           </div>
-          <div className="mt-3 flex justify-between">
+          <div className="mt-3">
             {externalUrl ? (
               <a
                 href={externalUrl}
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-orange-500 hover:text-orange-600 text-sm"
+                className="w-full"
               >
-                Voir détails
+                <Button 
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  Payer
+                </Button>
               </a>
             ) : (
               <Link
                 to={`/cours/${id}`}
-                className="text-orange-500 hover:text-orange-600 text-sm"
+                className="w-full"
               >
-                Voir détails
+                <Button 
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  Payer
+                </Button>
               </Link>
             )}
           </div>

@@ -15,6 +15,7 @@ import LoginPage from "./pages/LoginPage";
 import InscriptionPage from "./pages/InscriptionPage";
 import DevenirFormateurPage from "./pages/DevenirFormateurPage";
 import NotFound from "./pages/NotFound";
+import { CourseProvider } from "./utils/courseStorage";
 
 // Categories Pages
 import BusinessPage from "./pages/categories/BusinessPage";
@@ -38,48 +39,50 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/cours" element={<CoursesPage />} />
-        <Route path="/a-propos" element={<AboutPage />} />
-        <Route path="/affiliation" element={<AffiliationPage />} />
-        <Route path="/affiliation/inscription" element={<AffiliationRegistrationPage />} />
-        <Route path="/partenaire" element={<PartnershipPage />} />
-        <Route path="/partenaire/inscription" element={<PartnerRegistrationPage />} />
-        <Route path="/connexion" element={<LoginPage />} />
-        <Route path="/inscription" element={<InscriptionPage />} />
-        <Route path="/devenir-formateur" element={<DevenirFormateurPage />} />
-        
-        {/* Routes pour les catégories */}
-        <Route path="/categories/business" element={<BusinessPage />} />
-        <Route path="/categories/agriculture" element={<AgriculturePage />} />
-        <Route path="/categories/technologie" element={<TechnologiePage />} />
-        <Route path="/categories/ia" element={<IAPage />} />
-        <Route path="/categories/marketing" element={<MarketingPage />} />
-        
-        {/* Routes pour le panel d'administration */}
-        <Route path="/panel" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="utilisateurs" element={<AdminUsers />} />
-          <Route path="cours" element={<AdminCourses />} />
-          <Route path="cours/:id" element={<AdminCourseEdit />} />
-          <Route path="cours/new" element={<AdminCourseEdit />} />
-          <Route path="formateurs" element={<AdminInstructors />} />
-          <Route path="affilies" element={<AdminAffiliates />} />
-          <Route path="analytics" element={<AdminAnalytics />} />
-          <Route path="parametres" element={<AdminSettings />} />
-          <Route path="parametres/paiements" element={<AdminSettings />} />
-          <Route path="parametres/notifications" element={<AdminSettings />} />
-          <Route path="parametres/securite" element={<AdminSettings />} />
-          <Route path="parametres/systeme" element={<AdminSettings />} />
-        </Route>
-        
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TooltipProvider>
+    <CourseProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/cours" element={<CoursesPage />} />
+          <Route path="/a-propos" element={<AboutPage />} />
+          <Route path="/affiliation" element={<AffiliationPage />} />
+          <Route path="/affiliation/inscription" element={<AffiliationRegistrationPage />} />
+          <Route path="/partenaire" element={<PartnershipPage />} />
+          <Route path="/partenaire/inscription" element={<PartnerRegistrationPage />} />
+          <Route path="/connexion" element={<LoginPage />} />
+          <Route path="/inscription" element={<InscriptionPage />} />
+          <Route path="/devenir-formateur" element={<DevenirFormateurPage />} />
+          
+          {/* Routes pour les catégories */}
+          <Route path="/categories/business" element={<BusinessPage />} />
+          <Route path="/categories/agriculture" element={<AgriculturePage />} />
+          <Route path="/categories/technologie" element={<TechnologiePage />} />
+          <Route path="/categories/ia" element={<IAPage />} />
+          <Route path="/categories/marketing" element={<MarketingPage />} />
+          
+          {/* Routes pour le panel d'administration */}
+          <Route path="/panel" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="utilisateurs" element={<AdminUsers />} />
+            <Route path="cours" element={<AdminCourses />} />
+            <Route path="cours/:id" element={<AdminCourseEdit />} />
+            <Route path="cours/new" element={<AdminCourseEdit />} />
+            <Route path="formateurs" element={<AdminInstructors />} />
+            <Route path="affilies" element={<AdminAffiliates />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="parametres" element={<AdminSettings />} />
+            <Route path="parametres/paiements" element={<AdminSettings />} />
+            <Route path="parametres/notifications" element={<AdminSettings />} />
+            <Route path="parametres/securite" element={<AdminSettings />} />
+            <Route path="parametres/systeme" element={<AdminSettings />} />
+          </Route>
+          
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </TooltipProvider>
+    </CourseProvider>
   </QueryClientProvider>
 );
 

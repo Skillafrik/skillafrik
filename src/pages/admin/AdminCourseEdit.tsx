@@ -8,16 +8,28 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Save, Trash2, Upload, ExternalLink, Image } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Upload, ExternalLink, Image, AlertCircle } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { useCourses, Course } from "@/utils/courseStorage";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const AdminCourseEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isNew = id === "new";
+  const { getCourseById, addCourse, updateCourse, deleteCourse } = useCourses();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const [course, setCourse] = useState({
-    id: "",
+  const emptyCourse: Omit<Course, "id"> = {
     title: "",
     description: "",
     instructor: "",
@@ -27,47 +39,77 @@ const AdminCourseEdit = () => {
     originalPrice: 0,
     duration: 0,
     students: 0,
-    imageUrl: "",
     rating: 0,
     status: "draft",
-    externalUrl: ""
-  });
+    imageUrl: "",
+    externalUrl: "",
+    reviewCount: 0
+  };
 
+  const [course, setCourse] = useState<Omit<Course, "id"> & { id?: string }>(emptyCourse);
   const [imagePreview, setImagePreview] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (!isNew) {
-      // Simuler la récupération des données d'un cours existant
-      // Dans un cas réel, cela serait un appel API
-      const courseData = {
-        id: "6",
-        title: "Intelligence Artificielle: Applications Pratiques",
-        description: "Ce cours explore les applications pratiques de l'intelligence artificielle dans différents secteurs.",
-        instructor: "Amina Toure",
-        category: "IA",
-        level: "Avancé",
-        price: 25000,
-        originalPrice: 125000,
-        duration: 25,
-        students: 645,
-        imageUrl: "/lovable-uploads/ae605dec-9ca4-4a78-8ed7-7a0dadbadc30.png",
-        rating: 4.7,
-        status: "published",
-        externalUrl: "https://skillafrik.mychariow.com/prd_pycgdm"
-      };
-      
-      setCourse(courseData);
-      setImagePreview(courseData.imageUrl);
+    if (!isNew && id) {
+      const existingCourse = getCourseById(id);
+      if (existingCourse) {
+        setCourse(existingCourse);
+        setImagePreview(existingCourse.imageUrl || "");
+      } else {
+        toast({
+          title: "Cours non trouvé",
+          description: "Le cours que vous essayez de modifier n'existe pas.",
+          variant: "destructive",
+        });
+        navigate("/panel/cours");
+      }
     }
-  }, [isNew, id]);
+  }, [isNew, id, getCourseById, navigate]);
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!course.title.trim()) {
+      newErrors.title = "Le titre est requis";
+    }
+    
+    if (!course.instructor.trim()) {
+      newErrors.instructor = "Le nom de l'instructeur est requis";
+    }
+    
+    if (course.price < 0) {
+      newErrors.price = "Le prix ne peut pas être négatif";
+    }
+    
+    if (course.originalPrice < 0) {
+      newErrors.originalPrice = "Le prix original ne peut pas être négatif";
+    }
+    
+    if (course.duration < 0) {
+      newErrors.duration = "La durée ne peut pas être négative";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setCourse(prev => ({
       ...prev,
-      [name]: name === "price" || name === "originalPrice" || name === "duration" ? 
+      [name]: name === "price" || name === "originalPrice" || name === "duration" || name === "students" ? 
         Number(value) : value
     }));
+    
+    // Clear error for this field if any
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = {...prev};
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -87,11 +129,11 @@ const AdminCourseEdit = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Dans un cas réel, cela serait un téléchargement vers un service de stockage
+      // In a real app, this would be an upload to a storage service
       const objectUrl = URL.createObjectURL(file);
       setImagePreview(objectUrl);
       
-      // Simuler un chemin d'accès à l'image après téléchargement
+      // Simulate an image path after upload
       setCourse(prev => ({
         ...prev,
         imageUrl: objectUrl
@@ -99,20 +141,64 @@ const AdminCourseEdit = () => {
     }
   };
 
+  const handleDeleteCourse = () => {
+    if (id) {
+      const success = deleteCourse(id);
+      
+      if (success) {
+        toast({
+          title: "Cours supprimé",
+          description: "Le cours a été supprimé avec succès.",
+        });
+        navigate("/panel/cours");
+      } else {
+        toast({
+          title: "Erreur de suppression",
+          description: "Une erreur est survenue lors de la suppression du cours.",
+          variant: "destructive",
+        });
+      }
+    }
+    setShowDeleteDialog(false);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Dans un cas réel, cela serait un appel API pour sauvegarder le cours
-    console.log("Cours à sauvegarder:", course);
+    if (!validateForm()) {
+      toast({
+        title: "Formulaire incomplet",
+        description: "Veuillez corriger les erreurs dans le formulaire.",
+        variant: "destructive",
+      });
+      return;
+    }
     
-    // Afficher un toast de confirmation
-    toast({
-      title: `Cours ${isNew ? "créé" : "mis à jour"} avec succès`,
-      description: `Le cours "${course.title}" a été ${isNew ? "créé" : "mis à jour"} et est maintenant ${course.status === "published" ? "publié" : "en brouillon"}.`,
-    });
-    
-    // Rediriger vers la liste des cours
-    navigate("/panel/cours");
+    try {
+      if (isNew) {
+        // Add new course
+        addCourse(course);
+        toast({
+          title: "Cours créé",
+          description: `Le cours "${course.title}" a été créé avec succès.`,
+        });
+      } else if (id) {
+        // Update existing course
+        updateCourse(id, course);
+        toast({
+          title: "Cours mis à jour",
+          description: `Le cours "${course.title}" a été mis à jour avec succès.`,
+        });
+      }
+      
+      navigate("/panel/cours");
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'enregistrement du cours.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -127,7 +213,11 @@ const AdminCourseEdit = () => {
         
         <div className="flex space-x-2">
           {!isNew && (
-            <Button variant="destructive" size="sm">
+            <Button 
+              variant="destructive" 
+              size="sm" 
+              onClick={() => setShowDeleteDialog(true)}
+            >
               <Trash2 className="mr-2 h-4 w-4" /> Supprimer
             </Button>
           )}
@@ -138,7 +228,7 @@ const AdminCourseEdit = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Colonne principale */}
+        {/* Main Column */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
@@ -147,14 +237,20 @@ const AdminCourseEdit = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Titre du cours</Label>
+                <Label htmlFor="title" className={errors.title ? "text-red-500" : ""}>
+                  Titre du cours
+                </Label>
                 <Input 
                   id="title" 
                   name="title" 
                   value={course.title} 
                   onChange={handleChange}
                   placeholder="Ex: Introduction à la Programmation"
+                  className={errors.title ? "border-red-500" : ""}
                 />
+                {errors.title && (
+                  <p className="text-sm text-red-500">{errors.title}</p>
+                )}
               </div>
               
               <div className="space-y-2">
@@ -162,7 +258,7 @@ const AdminCourseEdit = () => {
                 <Textarea 
                   id="description" 
                   name="description" 
-                  value={course.description} 
+                  value={course.description || ""} 
                   onChange={handleChange}
                   placeholder="Décrivez votre cours..."
                   rows={5}
@@ -170,14 +266,20 @@ const AdminCourseEdit = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="instructor">Instructeur</Label>
+                <Label htmlFor="instructor" className={errors.instructor ? "text-red-500" : ""}>
+                  Instructeur
+                </Label>
                 <Input 
                   id="instructor" 
                   name="instructor" 
                   value={course.instructor} 
                   onChange={handleChange}
                   placeholder="Nom de l'instructeur"
+                  className={errors.instructor ? "border-red-500" : ""}
                 />
+                {errors.instructor && (
+                  <p className="text-sm text-red-500">{errors.instructor}</p>
+                )}
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -221,7 +323,9 @@ const AdminCourseEdit = () => {
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="duration">Durée (heures)</Label>
+                  <Label htmlFor="duration" className={errors.duration ? "text-red-500" : ""}>
+                    Durée (heures)
+                  </Label>
                   <Input 
                     id="duration" 
                     name="duration" 
@@ -229,7 +333,11 @@ const AdminCourseEdit = () => {
                     value={course.duration} 
                     onChange={handleChange}
                     min="0"
+                    className={errors.duration ? "border-red-500" : ""}
                   />
+                  {errors.duration && (
+                    <p className="text-sm text-red-500">{errors.duration}</p>
+                  )}
                 </div>
                 
                 <div className="space-y-2">
@@ -251,7 +359,7 @@ const AdminCourseEdit = () => {
                   <Input 
                     id="externalUrl" 
                     name="externalUrl" 
-                    value={course.externalUrl} 
+                    value={course.externalUrl || ""} 
                     onChange={handleChange}
                     placeholder="https://..."
                     className="flex-1"
@@ -264,7 +372,9 @@ const AdminCourseEdit = () => {
                     </Button>
                   )}
                 </div>
-                <p className="text-sm text-gray-500">Lien externe pour rediriger les utilisateurs vers une plateforme de vente</p>
+                <p className="text-sm text-gray-500">
+                  Lien externe pour rediriger les utilisateurs vers une plateforme de vente
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -311,7 +421,7 @@ const AdminCourseEdit = () => {
           </Card>
         </div>
         
-        {/* Colonne latérale */}
+        {/* Sidebar */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -320,7 +430,9 @@ const AdminCourseEdit = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="price">Prix actuel (FCFA)</Label>
+                <Label htmlFor="price" className={errors.price ? "text-red-500" : ""}>
+                  Prix actuel (FCFA)
+                </Label>
                 <Input 
                   id="price" 
                   name="price" 
@@ -328,11 +440,17 @@ const AdminCourseEdit = () => {
                   value={course.price} 
                   onChange={handleChange}
                   min="0"
+                  className={errors.price ? "border-red-500" : ""}
                 />
+                {errors.price && (
+                  <p className="text-sm text-red-500">{errors.price}</p>
+                )}
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="originalPrice">Prix original (FCFA)</Label>
+                <Label htmlFor="originalPrice" className={errors.originalPrice ? "text-red-500" : ""}>
+                  Prix original (FCFA)
+                </Label>
                 <Input 
                   id="originalPrice" 
                   name="originalPrice" 
@@ -340,8 +458,14 @@ const AdminCourseEdit = () => {
                   value={course.originalPrice} 
                   onChange={handleChange}
                   min="0"
+                  className={errors.originalPrice ? "border-red-500" : ""}
                 />
-                <p className="text-xs text-gray-500">Définissez un prix original plus élevé pour montrer une réduction</p>
+                {errors.originalPrice && (
+                  <p className="text-sm text-red-500">{errors.originalPrice}</p>
+                )}
+                <p className="text-xs text-gray-500">
+                  Définissez un prix original plus élevé pour montrer une réduction
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -417,6 +541,27 @@ const AdminCourseEdit = () => {
           )}
         </div>
       </div>
+
+      {/* Delete Course Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action est irréversible. Le cours sera définitivement supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteCourse}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
