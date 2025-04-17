@@ -1,20 +1,23 @@
 
 import { useState, useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
-import { Settings, Users, BookOpen, Award, LineChart, Home, DollarSign, Share2, Moon, Sun, Menu, X } from "lucide-react";
+import { Settings, Users, BookOpen, Award, LineChart, Home, DollarSign, Share2, Moon, Sun, Menu, X, LogOut, ClipboardList } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMobile } from "@/hooks/use-mobile";
+import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const AdminLayout = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const location = useLocation();
+  const navigate = useNavigate();
   const isMobile = useMobile();
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
+  const { logout } = useAdminAuth();
   
   useEffect(() => {
     // Adjust sidebar state when screen size changes
@@ -39,6 +42,7 @@ const AdminLayout = () => {
     { title: "Cours", path: "/panel/cours", icon: BookOpen },
     { title: "Formateurs", path: "/panel/formateurs", icon: Award },
     { title: "Affiliés", path: "/panel/affilies", icon: Share2 },
+    { title: "Inscriptions", path: "/panel/inscriptions", icon: ClipboardList },
     { title: "Analytics", path: "/panel/analytics", icon: LineChart },
     { title: "Paramètres", path: "/panel/parametres", icon: Settings },
   ];
@@ -49,6 +53,11 @@ const AdminLayout = () => {
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/admin-login");
   };
 
   // Mobile sidebar as Sheet component
@@ -84,7 +93,15 @@ const AdminLayout = () => {
           </div>
           
           <div className="p-4 border-t border-blue-700">
-            <div className="text-xs opacity-70 text-center">
+            <Button 
+              variant="ghost" 
+              className="text-white w-full flex items-center justify-center"
+              onClick={handleLogout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Déconnexion
+            </Button>
+            <div className="text-xs opacity-70 text-center mt-4">
               © 2025 SkillAfrik<br />
               Panel v1.0
             </div>
@@ -127,6 +144,15 @@ const AdminLayout = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Déconnexion">
+                  <button onClick={handleLogout}>
+                    <LogOut />
+                    <span>Déconnexion</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { addRegistration } from '@/utils/registrationService';
 
 const InscriptionPage = () => {
   const navigate = useNavigate();
@@ -82,17 +84,23 @@ const InscriptionPage = () => {
     if (Object.keys(validationErrors).length === 0) {
       setIsSubmitting(true);
       
-      // Simulation d'une API call
-      setTimeout(() => {
-        toast({
-          title: "Inscription réussie!",
-          description: "Votre compte a été créé avec succès.",
-          variant: "default"
-        });
-        
-        navigate('/connexion');
-        setIsSubmitting(false);
-      }, 1500);
+      // Ajouter l'utilisateur au système de gestion des inscriptions
+      addRegistration({
+        nom: formData.nom,
+        prenom: formData.prenom,
+        email: formData.email,
+        telephone: formData.telephone
+      });
+      
+      // Afficher un toast de confirmation
+      toast({
+        title: "Inscription réussie!",
+        description: "Votre compte a été créé avec succès.",
+        variant: "default"
+      });
+      
+      navigate('/connexion');
+      setIsSubmitting(false);
     }
   };
 

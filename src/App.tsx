@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import CoursesPage from "./pages/CoursesPage";
 import AboutPage from "./pages/AboutPage";
@@ -16,6 +16,7 @@ import InscriptionPage from "./pages/InscriptionPage";
 import DevenirFormateurPage from "./pages/DevenirFormateurPage";
 import NotFound from "./pages/NotFound";
 import { CourseProvider } from "./contexts/CourseContext";
+import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 
 // Categories Pages
 import BusinessPage from "./pages/categories/BusinessPage";
@@ -32,57 +33,70 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import AdminCourseEdit from "./pages/admin/AdminCourseEdit";
 import AdminInstructors from "./pages/admin/AdminInstructors";
 import AdminAffiliates from "./pages/admin/AdminAffiliates";
+import AdminRegistrations from "./pages/admin/AdminRegistrations";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminLogin from "./pages/admin/AdminLogin";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <CourseProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/cours" element={<CoursesPage />} />
-          <Route path="/a-propos" element={<AboutPage />} />
-          <Route path="/affiliation" element={<AffiliationPage />} />
-          <Route path="/affiliation/inscription" element={<AffiliationRegistrationPage />} />
-          <Route path="/partenaire" element={<PartnershipPage />} />
-          <Route path="/partenaire/inscription" element={<PartnerRegistrationPage />} />
-          <Route path="/connexion" element={<LoginPage />} />
-          <Route path="/inscription" element={<InscriptionPage />} />
-          <Route path="/devenir-formateur" element={<DevenirFormateurPage />} />
-          
-          {/* Routes pour les catégories */}
-          <Route path="/categories/business" element={<BusinessPage />} />
-          <Route path="/categories/agriculture" element={<AgriculturePage />} />
-          <Route path="/categories/technologie" element={<TechnologiePage />} />
-          <Route path="/categories/ia" element={<IAPage />} />
-          <Route path="/categories/marketing" element={<MarketingPage />} />
-          
-          {/* Routes pour le panel d'administration */}
-          <Route path="/panel" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="utilisateurs" element={<AdminUsers />} />
-            <Route path="cours" element={<AdminCourses />} />
-            <Route path="cours/:id" element={<AdminCourseEdit />} />
-            <Route path="cours/new" element={<AdminCourseEdit />} />
-            <Route path="formateurs" element={<AdminInstructors />} />
-            <Route path="affilies" element={<AdminAffiliates />} />
-            <Route path="analytics" element={<AdminAnalytics />} />
-            <Route path="parametres" element={<AdminSettings />} />
-            <Route path="parametres/paiements" element={<AdminSettings />} />
-            <Route path="parametres/notifications" element={<AdminSettings />} />
-            <Route path="parametres/securite" element={<AdminSettings />} />
-            <Route path="parametres/systeme" element={<AdminSettings />} />
-          </Route>
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </TooltipProvider>
-    </CourseProvider>
+    <AdminAuthProvider>
+      <CourseProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/cours" element={<CoursesPage />} />
+            <Route path="/a-propos" element={<AboutPage />} />
+            <Route path="/affiliation" element={<AffiliationPage />} />
+            <Route path="/affiliation/inscription" element={<AffiliationRegistrationPage />} />
+            <Route path="/partenaire" element={<PartnershipPage />} />
+            <Route path="/partenaire/inscription" element={<PartnerRegistrationPage />} />
+            <Route path="/connexion" element={<LoginPage />} />
+            <Route path="/inscription" element={<InscriptionPage />} />
+            <Route path="/devenir-formateur" element={<DevenirFormateurPage />} />
+            
+            {/* Routes pour les catégories */}
+            <Route path="/categories/business" element={<BusinessPage />} />
+            <Route path="/categories/agriculture" element={<AgriculturePage />} />
+            <Route path="/categories/technologie" element={<TechnologiePage />} />
+            <Route path="/categories/ia" element={<IAPage />} />
+            <Route path="/categories/marketing" element={<MarketingPage />} />
+            
+            {/* Route de connexion admin */}
+            <Route path="/admin-login" element={<AdminLogin />} />
+            
+            {/* Routes pour le panel d'administration (protégées) */}
+            <Route path="/panel" element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<AdminDashboard />} />
+              <Route path="utilisateurs" element={<AdminUsers />} />
+              <Route path="cours" element={<AdminCourses />} />
+              <Route path="cours/:id" element={<AdminCourseEdit />} />
+              <Route path="cours/new" element={<AdminCourseEdit />} />
+              <Route path="formateurs" element={<AdminInstructors />} />
+              <Route path="affilies" element={<AdminAffiliates />} />
+              <Route path="inscriptions" element={<AdminRegistrations />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
+              <Route path="parametres" element={<AdminSettings />} />
+              <Route path="parametres/paiements" element={<AdminSettings />} />
+              <Route path="parametres/notifications" element={<AdminSettings />} />
+              <Route path="parametres/securite" element={<AdminSettings />} />
+              <Route path="parametres/systeme" element={<AdminSettings />} />
+            </Route>
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </TooltipProvider>
+      </CourseProvider>
+    </AdminAuthProvider>
   </QueryClientProvider>
 );
 

@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { addPartnership } from '@/utils/registrationService';
 
 const formSchema = z.object({
   organizationName: z.string().min(2, { message: "Le nom de l'organisation est requis" }),
@@ -50,16 +51,24 @@ const PartnerRegistrationPage = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     
-    // Simuler une soumission de formulaire
-    setTimeout(() => {
-      console.log(values);
-      setIsSubmitting(false);
-      toast({
-        title: "Demande envoyée avec succès !",
-        description: "Notre équipe va examiner votre demande de partenariat et vous recontactera bientôt.",
-      });
-      form.reset();
-    }, 1500);
+    // Ajouter le partenariat au système
+    addPartnership({
+      organizationName: values.organizationName,
+      contactName: values.contactName,
+      email: values.email,
+      phone: values.phone,
+      partnerType: values.partnerType,
+      country: values.country
+    });
+    
+    // Afficher un toast de confirmation
+    toast({
+      title: "Demande envoyée avec succès !",
+      description: "Notre équipe va examiner votre demande de partenariat et vous recontactera bientôt.",
+    });
+    
+    form.reset();
+    setIsSubmitting(false);
   }
 
   return (

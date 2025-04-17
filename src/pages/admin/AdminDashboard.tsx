@@ -1,6 +1,19 @@
+
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   RefreshCcw,
   Users,
@@ -8,7 +21,8 @@ import {
   Award,
   Share2,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Lock
 } from "lucide-react";
 import { 
   CartesianGrid, 
@@ -26,6 +40,7 @@ import {
   Cell
 } from "recharts";
 import { useToast } from "@/components/ui/use-toast";
+import { resetDashboardData } from '@/utils/registrationService';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
@@ -38,6 +53,8 @@ const AdminDashboard = () => {
   });
 
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   // Données pour les graphiques
   const revenueData = [
@@ -71,22 +88,31 @@ const AdminDashboard = () => {
   // Couleurs pour les graphiques
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
-  const resetDashboard = () => {
-    setStats({
-      totalUsers: 0,
-      totalCourses: 0,
-      totalRevenue: 0,
-      totalInstructors: 0,
-      totalAffiliates: 0
-    });
-    
-    toast({
-      title: "Système réinitialisé",
-      description: "Toutes les statistiques ont été remises à zéro.",
-      variant: "default"
-    });
-    
-    setResetConfirmOpen(false);
+  const handleResetConfirm = () => {
+    if (adminPassword === 'Admin228') {
+      // Réinitialisation tout en préservant les cours
+      resetDashboardData();
+      
+      setStats({
+        totalUsers: 0,
+        totalCourses: stats.totalCourses, // On garde le nombre de cours inchangé
+        totalRevenue: 0,
+        totalInstructors: 0,
+        totalAffiliates: 0
+      });
+      
+      toast({
+        title: "Système réinitialisé",
+        description: "Les statistiques ont été remises à zéro, mais les cours ont été préservés.",
+        variant: "default"
+      });
+      
+      setAdminPassword("");
+      setPasswordError("");
+      setResetConfirmOpen(false);
+    } else {
+      setPasswordError("Mot de passe incorrect");
+    }
   };
 
   const formatCurrency = (value: number) => {
@@ -98,34 +124,56 @@ const AdminDashboard = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h2 className="text-3xl font-bold">Tableau de bord</h2>
         
-        {resetConfirmOpen ? (
-          <div className="flex items-center gap-2">
+        <AlertDialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
+          <AlertDialogTrigger asChild>
             <Button 
-              onClick={() => setResetConfirmOpen(false)}
-              variant="outline"
-              className="border-gray-300"
+              variant="outline" 
+              className="flex items-center border-gray-300"
             >
-              Annuler
+              <RefreshCcw className="mr-2 h-4 w-4" />
+              Réinitialiser le système
             </Button>
-            <Button 
-              onClick={resetDashboard}
-              variant="destructive"
-              className="flex items-center"
-            >
-              <CheckCircle className="mr-1 h-4 w-4" />
-              Confirmer la réinitialisation
-            </Button>
-          </div>
-        ) : (
-          <Button 
-            onClick={() => setResetConfirmOpen(true)}
-            variant="outline" 
-            className="flex items-center border-gray-300"
-          >
-            <RefreshCcw className="mr-2 h-4 w-4" />
-            Réinitialiser le système
-          </Button>
-        )}
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirmation de réinitialisation</AlertDialogTitle>
+              <AlertDialogDescription>
+                Cette action va réinitialiser les utilisateurs, formateurs, affiliés et revenus.
+                <span className="font-semibold block mt-2">Les cours ne seront pas affectés.</span>
+                
+                <div className="mt-4">
+                  <label htmlFor="adminPassword" className="block text-sm font-medium text-left mb-1">
+                    Veuillez entrer le mot de passe administrateur:
+                  </label>
+                  <div className="flex items-center">
+                    <Lock className="h-4 w-4 mr-2 text-gray-500" />
+                    <Input
+                      id="adminPassword"
+                      type="password"
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
+                      placeholder="Mot de passe administrateur"
+                    />
+                  </div>
+                  {passwordError && (
+                    <p className="text-sm text-red-600 mt-1">{passwordError}</p>
+                  )}
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => {
+                setAdminPassword("");
+                setPasswordError("");
+              }}>
+                Annuler
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleResetConfirm}>
+                Confirmer la réinitialisation
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       {/* Stats Cards */}
