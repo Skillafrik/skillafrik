@@ -248,7 +248,7 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
   
   return (
     <CourseContext.Provider 
-      value={{ 
+      value={{
         courses, 
         addCourse, 
         updateCourse, 
