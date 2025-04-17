@@ -2,8 +2,15 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Search, Filter, MoreHorizontal, Star } from "lucide-react";
+import { PlusCircle, Search, Filter, MoreHorizontal, Star, Edit, ExternalLink } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const AdminCourses = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,7 +27,8 @@ const AdminCourses = () => {
       price: "50 FCFA",
       students: 245,
       rating: 4.7,
-      status: "published"
+      status: "published",
+      externalUrl: ""
     },
     {
       id: 2,
@@ -31,7 +39,8 @@ const AdminCourses = () => {
       price: "80 FCFA",
       students: 189,
       rating: 4.9,
-      status: "published"
+      status: "published",
+      externalUrl: ""
     },
     {
       id: 3,
@@ -42,7 +51,8 @@ const AdminCourses = () => {
       price: "60 FCFA",
       students: 317,
       rating: 4.6,
-      status: "published"
+      status: "published",
+      externalUrl: ""
     },
     {
       id: 4,
@@ -53,7 +63,8 @@ const AdminCourses = () => {
       price: "70 FCFA",
       students: 124,
       rating: 4.8,
-      status: "published"
+      status: "published",
+      externalUrl: ""
     },
     {
       id: 5,
@@ -64,7 +75,8 @@ const AdminCourses = () => {
       price: "Gratuit",
       students: 520,
       rating: 4.5,
-      status: "published"
+      status: "published",
+      externalUrl: ""
     },
     {
       id: 6,
@@ -72,10 +84,11 @@ const AdminCourses = () => {
       category: "IA",
       level: "Avancé",
       instructor: "Amina Toure",
-      price: "90 FCFA",
+      price: "25000 FCFA",
       students: 78,
       rating: 4.7,
-      status: "draft"
+      status: "published",
+      externalUrl: "https://skillafrik.mychariow.com/prd_pycgdm"
     },
     {
       id: 7,
@@ -86,7 +99,8 @@ const AdminCourses = () => {
       price: "65 FCFA",
       students: 0,
       rating: 0,
-      status: "draft"
+      status: "draft",
+      externalUrl: ""
     },
   ];
 
@@ -131,9 +145,11 @@ const AdminCourses = () => {
             <CardTitle>Cours</CardTitle>
             <CardDescription>Gérez les cours de la plateforme</CardDescription>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
-            <PlusCircle className="mr-2 h-4 w-4" /> Ajouter un cours
-          </Button>
+          <Link to="/panel/cours/new">
+            <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+              <PlusCircle className="mr-2 h-4 w-4" /> Ajouter un cours
+            </Button>
+          </Link>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
@@ -211,9 +227,27 @@ const AdminCourses = () => {
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link to={`/panel/cours/${course.id}`}>
+                              <Edit className="mr-2 h-4 w-4" /> Modifier
+                            </Link>
+                          </DropdownMenuItem>
+                          {course.externalUrl && (
+                            <DropdownMenuItem asChild>
+                              <a href={course.externalUrl} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="mr-2 h-4 w-4" /> Voir URL externe
+                              </a>
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}

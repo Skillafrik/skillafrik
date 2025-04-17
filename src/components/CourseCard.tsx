@@ -16,6 +16,7 @@ interface CourseCardProps {
   students: number;
   id: string;
   featured?: boolean;
+  externalUrl?: string;
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
@@ -25,17 +26,23 @@ const CourseCard: React.FC<CourseCardProps> = ({
   reviewCount,
   price,
   originalPrice,
+  imageUrl,
   level,
   duration,
   students,
   id,
   featured = false,
+  externalUrl,
 }) => {
   return (
     <div className="course-card h-full flex flex-col">
       <div className="relative bg-gray-100 h-32 flex items-center justify-center">
-        <div className="level-badge">{level}</div>
-        <div className="text-lg font-medium text-gray-500">{title.substring(0, 2).toUpperCase()}</div>
+        {imageUrl ? (
+          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+        ) : (
+          <div className="text-lg font-medium text-gray-500">{title.substring(0, 2).toUpperCase()}</div>
+        )}
+        <div className="absolute top-2 left-2 bg-orange-500 text-white px-2 py-0.5 text-xs rounded">{level}</div>
       </div>
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="font-bold text-lg mb-2 line-clamp-2">{title}</h3>
@@ -82,12 +89,23 @@ const CourseCard: React.FC<CourseCardProps> = ({
             )}
           </div>
           <div className="mt-3 flex justify-between">
-            <Link
-              to={`/cours/${id}`}
-              className="text-orange-500 hover:text-orange-600 text-sm"
-            >
-              Voir détails
-            </Link>
+            {externalUrl ? (
+              <a
+                href={externalUrl}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-orange-500 hover:text-orange-600 text-sm"
+              >
+                Voir détails
+              </a>
+            ) : (
+              <Link
+                to={`/cours/${id}`}
+                className="text-orange-500 hover:text-orange-600 text-sm"
+              >
+                Voir détails
+              </Link>
+            )}
           </div>
         </div>
       </div>

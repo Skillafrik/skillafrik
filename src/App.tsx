@@ -28,6 +28,7 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminCourses from "./pages/admin/AdminCourses";
+import AdminCourseEdit from "./pages/admin/AdminCourseEdit";
 import AdminInstructors from "./pages/admin/AdminInstructors";
 import AdminAffiliates from "./pages/admin/AdminAffiliates";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
@@ -64,6 +65,8 @@ const App = () => (
           <Route index element={<AdminDashboard />} />
           <Route path="utilisateurs" element={<AdminUsers />} />
           <Route path="cours" element={<AdminCourses />} />
+          <Route path="cours/:id" element={<AdminCourseEdit />} />
+          <Route path="cours/new" element={<AdminCourseEdit />} />
           <Route path="formateurs" element={<AdminInstructors />} />
           <Route path="affilies" element={<AdminAffiliates />} />
           <Route path="analytics" element={<AdminAnalytics />} />

@@ -15,10 +15,12 @@ const IAPage = () => {
       rating: 4.7,
       reviewCount: 112,
       price: 25000,
-      originalPrice: 40000,
+      originalPrice: 125000,
       level: "Avancé",
       duration: 25,
-      students: 645
+      students: 645,
+      imageUrl: "/lovable-uploads/ae605dec-9ca4-4a78-8ed7-7a0dadbadc30.png",
+      externalUrl: "https://skillafrik.mychariow.com/prd_pycgdm"
     },
     {
       id: "ia1",
