@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { 
   NavigationMenu,
@@ -22,12 +21,15 @@ import {
   LineChart,
   ChevronDown,
   Menu,
-  X
+  X,
+  PanelTop
 } from "lucide-react";
 import { useState } from "react";
+import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAdminAuth();
 
   const categories = [
     {
@@ -71,7 +73,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
           <Link to="/cours" className="text-gray-600 hover:text-gray-900">Cours</Link>
           
@@ -102,9 +103,18 @@ const Navbar = () => {
           
           <Link to="/affiliation" className="text-gray-600 hover:text-gray-900">Affiliation</Link>
           <Link to="/a-propos" className="text-gray-600 hover:text-gray-900">À propos</Link>
+          
+          {isAuthenticated && (
+            <Link 
+              to="/panel" 
+              className="text-gray-600 hover:text-gray-900 flex items-center"
+            >
+              <PanelTop className="mr-2 h-4 w-4" />
+              Panel Admin
+            </Link>
+          )}
         </nav>
 
-        {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center space-x-2">
           <Link to="/connexion" className="text-gray-600 hover:text-gray-900 px-3 py-2">
             Se connecter
@@ -114,7 +124,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
         <button 
           className="md:hidden text-gray-600"
           onClick={toggleMobileMenu}
@@ -123,7 +132,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 py-4">
           <div className="container mx-auto px-4 space-y-4">
@@ -147,6 +155,16 @@ const Navbar = () => {
             
             <Link to="/affiliation" className="block py-2 text-gray-600">Affiliation</Link>
             <Link to="/a-propos" className="block py-2 text-gray-600">À propos</Link>
+            
+            {isAuthenticated && (
+              <Link 
+                to="/panel" 
+                className="block py-2 text-gray-600 flex items-center"
+              >
+                <PanelTop className="mr-2 h-4 w-4" />
+                Panel Admin
+              </Link>
+            )}
             
             <div className="flex flex-col space-y-2 pt-4 border-t border-gray-100">
               <Link to="/connexion" className="text-center py-2 text-gray-600">
