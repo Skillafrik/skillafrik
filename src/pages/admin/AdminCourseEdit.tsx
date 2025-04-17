@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Save, Trash2, Upload, ExternalLink, Image, AlertCircle } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Upload, ExternalLink, Image } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import { useCourses, Course } from "@/utils/courseStorage";
+import { Course } from "@/utils/courseStorage";
+import { useCourses } from "@/contexts/CourseContext";
 import {
   AlertDialog,
   AlertDialogAction,
